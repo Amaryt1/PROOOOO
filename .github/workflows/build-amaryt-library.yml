@@ -1,0 +1,35 @@
+name: Build AMARYTKit iOS library
+on:
+  push:
+    paths:
+      - '.github/workflows/build-amaryt-library.yml'
+      - 'source/AMARYTKit.m'
+      - 'scripts/compile.sh'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compile-ios:
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile native arm64 library using iPhoneOS SDK
+        run: |
+          set -euo pipefail
+          bash scripts/compile.sh "$RUNNER_TEMP/AMARYTKit.dylib"
+          codesign --force --sign - "$RUNNER_TEMP/AMARYTKit.dylib"
+          file "$RUNNER_TEMP/AMARYTKit.dylib"
+          xcrun dwarfdump --uuid "$RUNNER_TEMP/AMARYTKit.dylib"
+          shasum -a 256 "$RUNNER_TEMP/AMARYTKit.dylib"
+      - name: Package library
+        run: |
+          cp "$RUNNER_TEMP/AMARYTKit.dylib" AMARYTKit.dylib
+          shasum -a 256 AMARYTKit.dylib > AMARYTKit.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AMARYTKit-ios-arm64
+          path: |
+            AMARYTKit.dylib
+            AMARYTKit.sha256
+          if-no-files-found: error
