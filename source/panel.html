@@ -1,47 +1,166 @@
-<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
 <style>
-*{box-sizing:border-box}html,body{height:100%;margin:0}body{font:16px -apple-system,sans-serif;background:#000a;color:#f5f3ef;display:grid;place-items:center;padding:max(12px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}main{width:min(100%,620px);max-height:100%;overflow:auto;background:#202124;border:1px solid #555;border-radius:18px;padding:18px}h1{font-size:22px;margin:8px 0}p{white-space:pre-wrap;line-height:1.5}button,input,select{font:inherit;border-radius:10px;padding:9px 12px;border:1px solid #777;background:#333;color:white;margin:3px}button.primary{background:var(--accent,#d19b56);color:var(--ink,#181818);font-weight:700}img{max-height:95px;max-width:100%;object-fit:contain}article{border-top:1px solid #555;margin-top:12px;padding-top:8px}small{color:#ccc}input{width:min(100%,260px)}
-</style><main id="p" role="dialog" aria-modal="true"></main><script>
+:root{color-scheme:dark;--gold:#f9c84a;--bg:#0b1018;--card:#171d28;--edge:#2e3948;--muted:#abb7c8;--white:#fff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}body{font-family:-apple-system,BlinkMacSystemFont,"Geeza Pro",sans-serif;color:var(--white);background:rgba(1,4,8,.79);display:grid;place-items:center;padding:12px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+main{width:min(100%,975px);max-height:min(95vh,900px);height:min(88vh,810px);overflow:hidden;border-radius:24px;border:1px solid #64708766;background:linear-gradient(155deg,#192131 0%,#0b111c 70%);box-shadow:0 25px 80px #000b;display:flex;flex-direction:column;position:relative}
+main:before{content:"";height:2px;position:absolute;top:0;inset-inline:15px;background:linear-gradient(90deg,transparent,var(--gold),#39b3ce,transparent)}
+header{display:flex;align-items:center;gap:10px;padding:18px 22px 13px;border-bottom:1px solid var(--edge);flex-shrink:0}
+.brand{font-size:24px;font-weight:900;letter-spacing:.7px;direction:ltr;color:var(--gold)}
+.tagline{font-size:12px;color:var(--muted);margin-top:3px}
+.icon{width:20px;height:20px;display:inline-block;vertical-align:middle;flex-shrink:0}
+button{font:inherit;cursor:pointer;transition:transform .15s,background .16s,border-color .16s;-webkit-tap-highlight-color:transparent}
+button:active{transform:scale(.97)}button:disabled{opacity:.45;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #78d6ed;outline-offset:2px}
+.pill,.smallbtn{border:1px solid #485466;background:#273140;color:white;border-radius:12px;padding:10px 13px}
+.smallbtn{font-size:13px;padding:9px 12px}.smallbtn:hover,.pill:hover{background:#344357}
+.close{margin-inline-start:auto;border:1px solid #434f61;background:#202b38;color:white;border-radius:12px;width:40px;height:40px;font-size:21px}
+nav{display:flex;gap:7px;padding:10px 20px;overflow-x:auto;border-bottom:1px solid #303b4a;flex-shrink:0;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
+nav button{white-space:nowrap;border-radius:12px;padding:10px 13px;font-size:14px;border:1px solid transparent;background:transparent;color:#c0ccda}
+nav button.active{color:#0d1017;background:var(--gold);font-weight:800}nav button:not(.active):hover{background:#263040}
+.scroll{overflow-y:auto;flex:1;min-height:0;scrollbar-color:#626c7b transparent}
+.body{padding:17px 22px 27px}
+.hero{background:radial-gradient(circle at 10% 15%,#32607977,transparent 40%),linear-gradient(110deg,#27364c,#171d29 73%);border:1px solid #46596d;border-radius:18px;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;min-height:112px;gap:15px;overflow:hidden}
+.hero h1{font-size:23px;margin:0 0 8px}.hero p{font-size:13px;color:#c9d2dd;margin:0;line-height:1.6}.hero .symbol{font-size:52px;opacity:.85}
+.tools{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:18px 0 12px}
+input,select{font:inherit;color:#f5f7f9;background:#1c2633;border:1px solid #48576b;border-radius:11px;height:43px;padding:9px 12px;max-width:100%}
+input{flex:1;min-width:160px}select{min-width:130px}input::placeholder{color:#899aac}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 17px}
+.chip{background:#232d3b;border:1px solid #394758;border-radius:30px;padding:7px 12px;color:#d5deea;font-size:12px}
+.chip.active{color:#1b1609;background:var(--gold);border-color:var(--gold);font-weight:700}
+.sectionTitle{font-size:17px;font-weight:800;margin:8px 0 15px;display:flex;align-items:center;gap:9px}.sectionTitle:before{content:"";width:4px;height:21px;border-radius:3px;background:var(--gold)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.mod{overflow:hidden;background:linear-gradient(165deg,#253142,#171d29);border:1px solid #3a4658;border-radius:17px;transition:transform .15s,border-color .15s}
+.mod:hover{border-color:#8d7948;transform:translateY(-2px)}
+.preview{aspect-ratio:16/9;background:#121c2b;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.preview img{display:block;width:100%;height:100%;object-fit:cover}
+.placeholder{font-size:40px;color:#d1a83c}
+.floating{position:absolute;top:9px;right:9px;color:#1a1204;background:#ffd05f;border-radius:20px;font-size:11px;padding:5px 9px;font-weight:750}
+.details{padding:14px}
+.mod h3{font-size:16px;line-height:1.5;margin:0 0 8px;font-weight:750;min-height:22px}
+.size{font-size:13px;color:#b7c7d8;margin-bottom:13px}
+.state{color:#92e1ad;font-size:12px;font-weight:700;margin-bottom:9px;display:block}
+.actions{display:flex;gap:8px;align-items:center}.primary{flex:1;background:linear-gradient(100deg,#ffd25e,#d7a449);color:#19160e;border:0;border-radius:11px;padding:11px;font-size:14px;font-weight:850;min-height:44px}
+.primary:hover{filter:brightness(1.08)}
+.favorite{width:43px;height:43px;border-radius:11px;background:#293545;border:1px solid #4b5870;color:#ffcb60;font-size:21px}
+.favorite.active{background:#533c28}
+.notice{display:flex;gap:10px;align-items:center;color:#dce7f5;background:#283b4a;border:1px solid #456176;padding:11px 13px;border-radius:12px;font-size:13px;line-height:1.6;margin:10px 0 15px}
+.empty{text-align:center;padding:44px 16px;color:#adbacb;background:#151d2b;border:1px dashed #435065;border-radius:15px;font-size:15px}
+.empty strong{display:block;color:#f6c64c;font-size:38px;margin-bottom:10px}
+.infoRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:16px;border-radius:13px;background:#1b2634}
+.infoRow p{margin:5px 0;color:#b8c5d3;font-size:14px}
+.pop{width:min(100%,580px);height:auto;max-height:100%;padding:30px 24px;align-items:center;justify-content:center;margin:auto;text-align:center;display:block}
+.pop h1{color:#f2c154;font-size:25px;margin:14px 0}.pop p{line-height:1.8;color:#d6e0ee}.pop .primary{width:100%;margin:7px 0}
+.miniArt{width:95px;max-height:90px;object-fit:contain}
+footer{padding:9px 20px;background:#111a27;border-top:1px solid #2b394c;color:#9baabd;text-align:center;font-size:11px}
+@media(max-width:600px){body{padding:7px}main{border-radius:16px;height:min(96vh,950px);max-height:98vh}header{padding:12px 13px}nav{padding:6px 11px;gap:2px}nav button{font-size:12px;padding:9px 10px}.brand{font-size:19px}.body{padding:11px 13px 18px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.mod h3{font-size:13px}.details{padding:10px}.primary{font-size:12px;padding:8px}.hero{padding:14px;min-height:95px}.hero h1{font-size:18px}.hero .symbol{font-size:35px}select{min-width:100px}}
+@media(max-width:340px){.cards{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main id="app" role="dialog" aria-label="متجر المودات"></main>
+<script>
 'use strict';
 const post=(action,id='')=>webkit.messageHandlers.amar.postMessage({action,id});
-let state, query='', category='', favoritesOnly=false, downloadedOnly=false;
-const panel=document.querySelector('main');
-function add(tag,value,parent=panel){const e=document.createElement(tag);e.textContent=value;parent.appendChild(e);return e}
-function button(name,action,parent=panel,primary=false){const b=add('button',name,parent);b.onclick=action;if(primary)b.className='primary';return b}
-function photo(url,parent=panel){if(!url)return;const i=add('img','',parent);i.loading='lazy';i.alt='';i.onerror=()=>i.remove();i.src=url}
-function entries(parent){
- parent.textContent='';
- const filtered=state.catalog.mods.filter(m=>(!downloadedOnly || (state.downloaded||[]).includes(m.id)) && (!category || category===m.category) && (!favoritesOnly || state.favorites.includes(m.id)) && (m.name+' '+m.description).toLowerCase().includes(query.toLowerCase()));
- if(!filtered.length)add('p',state.catalog.mods.length?'ما في مودات تطابق بحثك.':'لا توجد مودات منشورة حاليًا.',parent);
- for(const m of filtered){
-  const files=m.files||[{name:m.id+'.'+m.extension,size:m.size}];const a=add('article','',parent);photo(m.image,a);add('h3',m.name,a);add('p',m.description,a);add('small',m.category+' · '+(files.reduce((sum,f)=>sum+f.size,0)/1048576).toFixed(2)+' MB · '+m.compatibility,a);add('br','',a);
-  add('small',files.map(f=>f.name).join(' · '),a);add('br','',a);const downloaded=Array.isArray(state.downloaded)&&state.downloaded.includes(m.id);if(downloaded){const status=add('small','✓ تم التحميل والتحقق من الملفات — لم يُؤكد التثبيت داخل اللعبة',a);status.setAttribute('role','status');add('br','',a)}const b=button(downloaded?'إعادة تنزيل الملفات':'تنزيل الملفات',()=>post('download',m.id),a,true);b.disabled=state.busy || state.version<m.minKit || state.version>m.maxKit;
-  button(state.favorites.includes(m.id)?'إزالة من المفضلة':'حفظ في المفضلة',()=>post('favorite',m.id),a)
- }
+const $=(tag,parent,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;if(parent)parent.appendChild(e);return e};
+const click=(label,parent,cls,fn)=>{const b=$('button',parent,cls,label);b.type='button';b.onclick=fn;return b};
+let state=null,section='home',category='',search='',sort='featured',favourites=new Set(),scrollTop=0;
+function has(id,list){return Array.isArray(list)&&list.includes(id)}
+function image(url,host,cls){if(typeof url!=='string'||!/^https:\/\//i.test(url))return null;const img=$('img',host,cls);img.alt='';img.loading='lazy';img.onerror=()=>img.remove();img.src=url;return img}
+function sizeLabel(m){let n=Number(m.archiveSize);if(!Number.isFinite(n)||n<=0){const f=m.files||[{size:m.size}];n=f.reduce((v,f)=>v+(Number(f.size)||0),0)}return n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB'}
+function preferred(m){return has(m.id,state.installed)?'installed':has(m.id,state.downloaded)?'downloaded':''}
+function mode(k){section=k;draw()}
+function top(app){const head=$('header',app);const brand=$('div',head);$('div',brand,'brand','AMAR YT');$('div',brand,'tagline','عالم الإضافات بين يديك');click('↻ تحديث',head,'smallbtn',()=>post('refreshMods'));click('×',head,'close',()=>post('close')).setAttribute('aria-label','إغلاق المتجر')}
+function menu(app){const nav=$('nav',app);for(const [id,label] of [['home','الرئيسية'],['all','كل المودات'],['downloaded','تحميلاتي'],['installed','المثبتة'],['favorites','المفضلة'],['updates','التحديثات'],['news','الأخبار']]){const b=click(label,nav,section===id?'active':'',()=>mode(id));b.setAttribute('aria-pressed',String(section===id))}}
+function empty(host,title,body){const e=$('div',host,'empty');$('strong',e,'','◈');$('div',e,'',title);if(body)$('div',e,'',body);return e}
+function sectionHeading(host,title){$('div',host,'sectionTitle',title)}
+function modCard(host,m){
+ const a=$('article',host,'mod'),p=$('div',a,'preview');
+ if(!image(m.image,p))$('div',p,'placeholder','🚘');
+ if(m.featured)$('span',p,'floating','مميز');
+ const d=$('div',a,'details');$('h3',d,'',m.name);$('div',d,'size',sizeLabel(m));
+ const stateName=preferred(m);
+ if(stateName)$('span',d,'state',stateName==='installed'?'✓ تم التثبيت':'✓ تم التحميل');
+ const acts=$('div',d,'actions');
+ const label=stateName==='installed'?'إعادة التثبيت':stateName==='downloaded'?'استيراد مجددًا':'تثبيت';
+ const action=click(label,acts,'primary',()=>post('download',m.id));
+ action.disabled=Boolean(state.busy)||Number(state.version)<Number(m.minKit)||Number(state.version)>Number(m.maxKit);
+ const liked=has(m.id,state.favorites);
+ const fav=click(liked?'♥':'♡',acts,liked?'favorite active':'favorite',()=>post('favorite',m.id));
+ fav.setAttribute('aria-label',liked?'إزالة من المفضلة':'إضافة إلى المفضلة');
 }
-function transferProgress(text){const e=document.getElementById('transferStatus');if(e)e.textContent=text;}
-function render(s){
- state=s;panel.textContent='';const c=s.config,kind=s.kind;
- document.body.style.setProperty('--accent',c.identity.accent);
- const rgb=c.identity.accent.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
- document.body.style.setProperty('--ink',rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722>.179?'#000':'#fff');
- add('small',c.identity.name+' · V'+s.version+' · بناء '+(s.build||'6')+' · المكتبة نشطة');
- if(kind==='catalog'){
-  add('h1','المودات');button('إغلاق',()=>post('close'));button('تحديث القائمة',()=>post('refreshMods'));button('فحص التحديث',()=>post('refreshConfig'));
-  add('p',s.connection||'الإعدادات المحلية');if(s.last)add('small','آخر اتصال بالإعدادات '+new Date(s.last*1000).toLocaleString('ar'));
-  const info=add('details','');add('summary','معلومات النسخة والتواصل',info);c.news.forEach(n=>add('p',n,info));button('مسح ذاكرة القائمة',()=>post('clearCatalog'),info);
-  for(const [key,name] of Object.entries({telegram:'تيليجرام',instagram:'إنستغرام',tiktok:'تيك توك'}))button(name,()=>post('social',key),info);
-  add('p','بعد التنزيل، افتح استيراد المودات في المشغّل واختر الملف من مجلد AMARYT-Mods إذا كان المستورد يدعم صيغته.',info);
-  const search=add('input','');search.type='search';search.placeholder='ابحث عن مود';search.value=query;
-  const select=add('select','');for(const k of ['',...s.catalog.categories]){const o=add('option',k||'كل التصنيفات',select);o.value=k}select.value=category;
-  button(downloadedOnly?'عرض الفهرس':'المودات المحمّلة',()=>{downloadedOnly=!downloadedOnly;render(state)});if(downloadedOnly)add('small',(s.downloaded||[]).join(' · '));button(favoritesOnly?'عرض الكل':'المفضلة',()=>{favoritesOnly=!favoritesOnly;render(state)});
-  add('p',s.status||'').id='transferStatus';const list=add('section','');search.oninput=()=>{query=search.value;entries(list)};select.onchange=()=>{category=select.value;entries(list)};entries(list);return
- }
- const update=kind==='force'||kind==='optional',m=update?c.update:c[kind];
- photo(m.image||c.identity.logo);add('h1',m.title);add('p',m.body);
- if(update){add('small','الإصدار '+(kind==='force'?m.minimum:m.latest));const ul=add('ul','');m.features.forEach(x=>add('li',x,ul))}
- button(m.action,()=>post(update?'update':'close'),panel,true);
- if(m.contact&&m.contactURL)button(m.contact,()=>post('contact'));
- if(kind!=='force')button('إغلاق',()=>post('close'));
+function filtered(){
+ let all=Array.isArray(state.catalog&&state.catalog.mods)?state.catalog.mods.slice():[];
+ if(section==='downloaded')all=all.filter(m=>has(m.id,state.downloaded));
+ if(section==='installed')all=all.filter(m=>has(m.id,state.installed));
+ if(section==='favorites')all=all.filter(m=>has(m.id,state.favorites));
+ if(category)all=all.filter(m=>m.category===category);
+ if(search.trim())all=all.filter(m=>String(m.name+' '+m.category).toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
+ if(sort==='name')all.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+ else if(sort==='size')all.sort((a,b)=>(Number(a.archiveSize)||0)-(Number(b.archiveSize)||0));
+ else all.sort((a,b)=>Number(Boolean(b.featured))-Number(Boolean(a.featured)));
+ return all;
 }
-</script></html>
+function mainContent(target){
+ if(section==='news'){
+  sectionHeading(target,'آخر الأخبار');
+  const news=state.config.news||[];
+  if(!news.length)empty(target,'لا توجد أخبار جديدة');
+  for(const n of news)$('div',target,'notice',n);
+  const social=$('div',target,'infoRow');$('div',social,'','تابعنا لمعرفة الإضافات الجديدة');
+  for(const [k,t] of [['telegram','تيليجرام'],['instagram','إنستغرام'],['tiktok','تيك توك']])click(t,social,'smallbtn',()=>post('social',k));
+  return;
+ }
+ if(section==='updates'){sectionHeading(target,'تحديثات المودات');empty(target,'لا توجد تحديثات مؤكدة حاليًا','سيظهر أي إصدار جديد بعد نشره والتحقق منه.');return}
+ if(section==='home'){
+  const hero=$('div',target,'hero'),t=$('div',hero);
+  $('h1',t,'','مودات GTA V في مكان واحد');$('p',t,'','سيارات وشخصيات وإضافات متنوعة، بحفظ وتنزيل آمن.');
+  $('div',hero,'symbol','🚘');
+ }
+ const toolbar=$('div',target,'tools');
+ const q=$('input',toolbar);q.type='search';q.placeholder='ابحث عن مود أو سيارة';q.setAttribute('aria-label','بحث في المودات');q.value=search;q.oninput=()=>{search=q.value;fillGrid()};
+ const select=$('select',toolbar);for(const [v,t] of [['featured','المميزة أولًا'],['name','حسب الاسم'],['size','حسب الحجم']]){$('option',select,'',t).value=v}select.value=sort;select.onchange=()=>{sort=select.value;fillGrid()};
+ const chips=$('div',target,'chips');
+ for(const k of ['',...(state.catalog.categories||[])])click(k||'الكل',chips,k===category?'chip active':'chip',()=>{category=k;draw()});
+ sectionHeading(target,({home:'أحدث الإضافات',all:'كل المودات',downloaded:'التحميلات المكتملة',installed:'المودات المثبتة',favorites:'المفضلة'})[section]||'المودات');
+ const grid=$('div',target,'cards');grid.id='modsGrid';
+ function fillGrid(){
+  grid.textContent='';const matches=filtered();
+  if(!matches.length){empty(grid,'لا توجد مودات في هذا القسم','يمكنك اختيار قسم آخر أو تحديث القائمة.');return}
+  for(const m of matches)modCard(grid,m);
+ }
+ fillGrid();
+}
+function draw(){
+ if(!state)return;const app=document.querySelector('#app');app.textContent='';
+ if(state.kind!=='catalog')return noticePanel(app);
+ top(app);menu(app);
+ const area=$('div',app,'scroll'),body=$('div',area,'body');
+ if(state.status){const bar=$('div',body,'notice',state.status);bar.setAttribute('role','status')}
+ if(state.busy)click('إلغاء التنزيل',body,'pill',()=>post('cancelDownload'));
+ mainContent(body);
+ $('footer',app,'','AMAR YT • ألعابك وإضافاتك في مكان واحد');
+}
+function noticePanel(app){
+ app.classList.add('pop');
+ const isUpdate=state.kind==='force'||state.kind==='optional';
+ const m=isUpdate?state.config.update:state.config[state.kind];
+ if(!m){click('إغلاق',app,'primary',()=>post('close'));return}
+ image(m.image||state.config.identity.logo,app,'miniArt');
+ $('h1',app,'',m.title||'AMAR YT');
+ $('p',app,'',m.body||'');
+ if(isUpdate){for(const feature of m.features||[])$('p',app,'',feature)}
+ click(m.action||'متابعة',app,'primary',()=>post(isUpdate?'update':'close'));
+ if(m.contact&&m.contactURL)click(m.contact,app,'pill',()=>post('contact'));
+ if(state.kind!=='force')click('إغلاق',app,'pill',()=>post('close'));
+}
+function render(s){state=s;document.querySelector('#app').classList.remove('pop');draw()}
+function transferProgress(t){if(state){state.status=t;const el=document.querySelector('.notice[role="status"]');if(el)el.textContent=t}}
+</script>
+</body></html>
