@@ -522,7 +522,13 @@ static BOOL regularFolder(NSURL *url){
  self.files=archive?@[archive]:(mod[@"files"]?:@[@{@"name":[NSString stringWithFormat:@"%@.%@",mod[@"id"],mod[@"extension"]],@"url":mod[@"url"],@"size":mod[@"size"],@"sha256":mod[@"sha256"],@"extension":mod[@"extension"]}]);
  NSURL *prior=[modRoot() URLByAppendingPathComponent:mod[@"id"]];
  NSArray *receipt=[NSArray arrayWithContentsOfURL:[prior URLByAppendingPathComponent:@".amar-files.plist"]];
- if([receipt isEqual:self.files] && [[self downloaded] containsObject:mod[@"id"]]){[self finishTransfer:@"كل ملفات هذه النسخة موجودة."];return;}
+ if([receipt isEqual:self.files] && [[self downloaded] containsObject:mod[@"id"]]){
+  if([self.files.firstObject[@"extension"] isEqual:@"zip"]){
+   NSURL *cachedArchive=[prior URLByAppendingPathComponent:self.files.firstObject[@"name"]];
+   [self importArchive:cachedArchive forMod:mod];
+  }else{self.status=@"تم التحميل مسبقًا.";[self render];}
+  return;
+ }
  self.stage=[[NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES] URLByAppendingPathComponent:NSUUID.UUID.UUIDString isDirectory:YES];
  if(![NSFileManager.defaultManager createDirectoryAtURL:self.stage withIntermediateDirectories:NO attributes:nil error:nil]){[self finishTransfer:@"تعذّر إنشاء مجلد التنزيل المؤقت."];return;}
  self.transfer=mod;self.fileIndex=0;
@@ -599,7 +605,7 @@ static BOOL saveMod(NSURL *tmp,NSDictionary *mod,NSURL *stage){
   }
  }
  trace([NSString stringWithFormat:@"%@ HTTP %ld %@",mods?@"catalog":@"config",(long)code,ok?@"accepted":@"rejected"]);
- if(!mods)self.connection=ok?@"متصل بـ GitHub":@"تعذر اعتماد إعدادات GitHub";
+ if(!mods)self.connection=ok?@"اكتمل تحديث البيانات":@"تعذّر تحديث البيانات";
  self.status=ok?(mods?@"قائمة المودات محدّثة.":@"اكتمل فحص الإصدار."):@"تعذّر اعتماد البيانات. تُعرض آخر نسخة صالحة.";
  if(ok && !mods){[prefs() setDouble:NSDate.date.timeIntervalSince1970 forKey:key(@"last")];if([self.kind isEqual:@"catalog"] && [[self updateMode] isEqual:@"optional"]){[self show:@"optional"];return;}}
  if(self.host)[self layout:self.host];[self evaluate];
