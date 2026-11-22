@@ -36,6 +36,19 @@ function validFiles(files) {
     return int(f.size) && f.size<=268435456 && total<=1073741824 && url(f.url) && typeof f.sha256==='string' && /^[a-f0-9]{64}$/.test(f.sha256);
   });
 }
+function validArchive(m) {
+ const remote='archiveURL' in m;
+ const bundled='bundleArchive' in m;
+ if(!remote && !bundled)return false;
+ if(remote && bundled)return false;
+ if(remote && (!url(m.archiveURL) || !/\.zip(?:[?#]|$)/i.test(m.archiveURL)))return false;
+ if(bundled && m.bundleArchive!=='pilot-cars.zip')return false;
+ if(!int(m.archiveSize) || m.archiveSize>536870912 || typeof m.archiveSha256!=='string' || !/^[a-f0-9]{64}$/.test(m.archiveSha256))return false;
+ return true;
+}
+function validExpected(m){
+ return !('expectedMods' in m) || (Array.isArray(m.expectedMods) && m.expectedMods.length>0 && m.expectedMods.length<=20 && m.expectedMods.every(x=>id(x)));
+}
 function validMods(c) {
   if(!obj(c) || c.schema!==1 || !Array.isArray(c.categories) || c.categories.length>50 || !c.categories.every(x=>text(x,80)) || !Array.isArray(c.mods) || c.mods.length>2000) return false;
   const ids=new Set();
@@ -43,7 +56,8 @@ function validMods(c) {
     if(!obj(m) || !id(m.id) || ids.has(m.id.toLowerCase())) return false;
     ids.add(m.id.toLowerCase());
     return text(m.name,150) && m.name.length && text(m.description) && c.categories.includes(m.category) && image(m.image)
-      && validFiles(modFiles(m)) && int(m.minKit) && int(m.maxKit)
+      && (validFiles(modFiles(m)) || validArchive(m)) && (!('archiveURL' in m || 'bundleArchive' in m) || validArchive(m))
+      && validExpected(m) && int(m.minKit) && int(m.maxKit)
       && m.maxKit>=m.minKit && text(m.compatibility,250);
   });
 }
