@@ -1,0 +1,47 @@
+name: Verify real GTA V mod assets
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-real-mod-assets.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Download upstream files and validate RSC7 magic, sizes and hashes
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,urllib.request,os
+          rev='b338e44abedb42cc3d14a0dee3147fac58495252'
+          root='https://raw.githubusercontent.com/Rymex47/free-modpack/'+rev+'/modpack/'
+          sources={
+            'nissan-gtr':('gtr',['gtr.yft','gtr_hi.yft','gtr.ytd']),
+            'dodge-charger':('charger',['sjdodge.yft','sjdodge_hi.yft','sjdodge.ytd']),
+            'lamborghini-huracan':('lambo',['lp610.yft','lp610_hi.yft','lp610.ytd']),
+          }
+          result={}
+          for mod,(folder,names) in sources.items():
+            result[mod]=[]
+            for name in names:
+              url=root+folder+'/stream/'+name
+              h=hashlib.sha256();size=0;magic=b''
+              with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'AMARYT-verifier'}),timeout=75) as response:
+                while True:
+                  chunk=response.read(1024*1024)
+                  if not chunk:break
+                  if not size:magic=chunk[:4]
+                  h.update(chunk);size+=len(chunk)
+              if magic!=b'RSC7' or size<128 or size>268435456:
+                raise RuntimeError(f'Not a supported RSC7 asset: {name} header={magic!r} size={size}')
+              result[mod].append(dict(name=name,url=url,size=size,sha256=h.hexdigest(),extension=name.rsplit('.',1)[1]))
+              print(mod,name,size,h.hexdigest(),flush=True)
+          with open('verified-mods.json','w') as f:json.dump(result,f,ensure_ascii=False,indent=2)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-real-mods
+          path: verified-mods.json
+          if-no-files-found: error
