@@ -8,6 +8,8 @@ on:
       - 'scripts/inspect_dlc_zip.py'
       - 'scripts/normalize_addon_zip.py'
       - 'research/iraq-gulf-mod-candidates-ar.json'
+      - 'research/iraq-gulf-verified-source-gallery.json'
+      - 'research/IRAQI-GULF-50-PHOTOS-AND-SOURCES.md'
       - '.github/workflows/validate-live-catalog.yml'
   workflow_dispatch:
 permissions:
@@ -70,6 +72,21 @@ jobs:
             failure=subprocess.run([sys.executable,'scripts/normalize_addon_zip.py',str(invalid),str(root/'bad.zip')],capture_output=True,text=True)
             assert failure.returncode!=0
           print('PASS: Arabic research catalog isolated; genuine RPF7 Add-on normalized; loose YFT rejected')
+          PY
+      - name: Ensure 50+ source pages stay separate from verified installers
+        run: |
+          python3 - <<'PY'
+          import json,pathlib
+          g=json.loads(pathlib.Path('research/iraq-gulf-verified-source-gallery.json').read_text())
+          assert g['verified']>=50
+          assert len(g['vehicles'])==g['verified']
+          assert len(set(x['source_page'] for x in g['vehicles']))==g['verified']
+          assert all(x['name_ar'] and x['original_title'] and x['original_preview_url'].startswith('https://img.gta5-mods.com/') for x in g['vehicles'])
+          assert all(x['direct_zip_verified'] is False and x['ios_install_tested'] is False for x in g['vehicles'])
+          live=json.loads(pathlib.Path('mods.json').read_text())
+          assert len(live['mods'])==1 and live['mods'][0]['id']=='iraqi-garage-3'
+          assert all('archiveSha256' not in x for x in g['vehicles'])
+          print('PASS:',g['verified'],'original-source previews, no fake ZIP assets or unsupported live installs')
           PY
       - name: Check every archive URL matches a released ZIP
         run: |
