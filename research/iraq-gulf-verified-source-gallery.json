@@ -1,0 +1,878 @@
+{
+  "schema": 1,
+  "checked": 70,
+  "verified": 51,
+  "missing": 19,
+  "warning_ar": "روابط صفحات وصور فقط. ليست ملفات ZIP صالحة للتثبيت. لا ترفع لملف mods.json قبل فحص أرشيف وصلاحية نشره وتجربة iPad.",
+  "vehicles": [
+    {
+      "name_ar": "سمند سورن",
+      "original_title": "Ikco samand soren [Add-On | OIV | Tuning | Animated]",
+      "source_page": "https://www.gta5-mods.com/vehicles/ikco-samand-soren-animated-oiv-add-on-body-kit-hq",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/ikco-samand-soren-animated-oiv-add-on-body-kit-hq/c29c3e-GTA5%202018-10-08%2017-27-14-928.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/ikco-samand-soren-animated-oiv-add-on-body-kit-hq/download/58590",
+      "possible_spawn_names_not_verified": [
+        "Sorenfna"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس GLX 2021",
+      "original_title": "Toyota Hilux GLX 2021 [Add-On / FiveM]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2021-add-on-fivem",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-hilux-glx-2021-add-on-fivem/5200b0-374211494_829221631913744_2043670646105742635_n.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2021-add-on-fivem/download/157225",
+      "possible_spawn_names_not_verified": [
+        "hilux21"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس GLX 2020",
+      "original_title": "Toyota Hilux Double GLX 2020 [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-double-glx-2020-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-hilux-double-glx-2020-add-on/88c3cf-376648335_829219191913988_1307223080239498644_n.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-hilux-double-glx-2020-add-on/download/158081",
+      "possible_spawn_names_not_verified": [
+        "hilux20"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس GLX 2016",
+      "original_title": "Toyota Hilux GLX 2016-2017 [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2016-2017-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-hilux-glx-2016-2017-add-on/286c83-6.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2016-2017-add-on/download/157148",
+      "possible_spawn_names_not_verified": [
+        "hilux16"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس روكو 2021",
+      "original_title": "Toyota Hilux Revo Rocco 2021 [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-revo-rocco-2021-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-hilux-revo-rocco-2021-add-on/36f074-1.jpeg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-hilux-revo-rocco-2021-add-on/download/186922",
+      "possible_spawn_names_not_verified": [
+        "hilux21"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس ريفو 2.8",
+      "original_title": "Toyota Hilux Revo 2.8 Cruisetronic [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-revo-2-8-cruisetronic-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-hilux-revo-2-8-cruisetronic-add-on/ea0b31-EVE-20251005120238.008.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-hilux-revo-2-8-cruisetronic-add-on/download/188826",
+      "possible_spawn_names_not_verified": [
+        "lianamc"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا برادو 150",
+      "original_title": "Toyota Prado 150 [ADD-ON]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-prado-150",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-prado-150/e24494-back.jpeg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-prado-150/download/185739",
+      "possible_spawn_names_not_verified": [
+        "prado_dg"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر GXR 2020",
+      "original_title": "Toyota Land Cruiser GXR 2020 [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-gxr-2020-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-land-cruiser-gxr-2020-add-on/5adda2-54.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-gxr-2020-add-on/download/186426",
+      "possible_spawn_names_not_verified": [
+        "zuwgxr2020"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر GXR 2016",
+      "original_title": "2016 Toyota Land Cruiser GXR [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/land-cruiser-gxr-2016-add-on-replace",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/land-cruiser-gxr-2016-add-on-replace/efa1ab-1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/land-cruiser-gxr-2016-add-on-replace/download/21785",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر VXR 2019",
+      "original_title": "Toyota Land Cruiser VXR Grand Touring [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-gxr-200-2019-add-on_locked",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-land-cruiser-gxr-200-2019-add-on_locked/aeb726-1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-gxr-200-2019-add-on_locked/download/122993",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر VXR 2016",
+      "original_title": "2016 Toyota Land Cruiser VXR  [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2016-land-cruiser-vxr",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2016-land-cruiser-vxr/138392-1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2016-land-cruiser-vxr/download/14908",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 200 موديل 2016",
+      "original_title": "Toyota Land Cruiser 200 2016 [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-200-2016",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-land-cruiser-200-2016/dd4d49-GTA5%202016-03-26%2013-25-36.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-200-2016/download/12912",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 200",
+      "original_title": "Toyota Land Cruiser 200 [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-200-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-land-cruiser-200-add-on/2217ee-Screenshot_27.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-200-add-on/download/186487",
+      "possible_spawn_names_not_verified": [
+        "luxun"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 300 موديل 2021",
+      "original_title": "Toyota Land Cruiser 300 2021 [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-2021-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-land-cruiser-300-2021-add-on/48ea69-Kruzak_3.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-2021-add-on/download/127496",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 300 موديل 2022",
+      "original_title": "TOYOTA LAND CRUISER 300 2022 HQ (Dynamic Indicators) [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-2022-hq-dynamic-indicators-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-land-cruiser-300-2022-hq-dynamic-indicators-add-on/238901-lc300zx_1.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-2022-hq-dynamic-indicators-add-on/download/196466",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 300 VX.R",
+      "original_title": "Toyota Land Cruiser 300 VX.R [Add-On | Legacy | Enhanced]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-vx-r-add-on-legacy-enhanced",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-land-cruiser-300-vx-r-add-on-legacy-enhanced/649738-1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-vx-r-add-on-legacy-enhanced/download/199717",
+      "possible_spawn_names_not_verified": [
+        "300vxr"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا كامري 2005",
+      "original_title": "Toyota Camry 2005 [Add-on]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-camry-2005-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-camry-2005-add-on/214c1c-EVE-20210728204018.029.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-camry-2005-add-on/download/128436",
+      "possible_spawn_names_not_verified": [
+        "cm2005"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا كامري V50",
+      "original_title": "Toyota Camry V50 [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-camry-v50-replace",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-camry-v50-replace/13e974-0_168f31_9cd62b8b_XXXL.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-camry-v50-replace/download/11323",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا إف جي كروزر VXR 2022",
+      "original_title": "Toyota FJ Cruiser VXR 2022 [Add-On / FiveM]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-fj-cruiser-vxr-2022-add-on-fivem-unlocked",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-fj-cruiser-vxr-2022-add-on-fivem-unlocked/9ede64-1.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-fj-cruiser-vxr-2022-add-on-fivem-unlocked/download/176807",
+      "possible_spawn_names_not_verified": [
+        "fj2022"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "تويوتا تندرا 2020 مصفحة",
+      "original_title": "Toyota Tundra 2020 Armored [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-tundra-2020-armored-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-tundra-2020-armored-add-on/6cd182-374172847_829219141913993_1681205103961085665_n.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/toyota-tundra-2020-armored-add-on/download/165318",
+      "possible_spawn_names_not_verified": [
+        "tundra2020sfh"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "لكزس LX570 2018",
+      "original_title": "Lexus LX570 2018 (Stock & WALD) [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/lexus-lx570-wald-2018-replace-add-on-alexhit",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/lexus-lx570-wald-2018-replace-add-on-alexhit/c50a79-GTA5%202019-03-21%2015-51-45.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/lexus-lx570-wald-2018-replace-add-on-alexhit/download/67157",
+      "possible_spawn_names_not_verified": [
+        "lx2018",
+        "wald2018"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سوبر سفاري 1997",
+      "original_title": "Nissan Patrol Super Safari Y60 1997 [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/nissan-patrol-super-safari-y60-1997/9e5e20-1.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997/download/131384",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سوبر سفاري 1997 أربعة أبواب",
+      "original_title": "Nissan Patrol Super Safari Y60 1997 LWB [Add-On / Replace | Livery | Extras | Template]",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997-4-door-add-on-livery-extras-dirt-template",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/nissan-patrol-super-safari-y60-1997-4-door-add-on-livery-extras-dirt-template/61fda2-20180404183219_1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997-4-door-add-on-livery-extras-dirt-template/download/46792",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سفاري 1997 بابين",
+      "original_title": "Nissan Patrol Super Safari Y60 1997 SWB [Add-On | Replace | Livery | Extras | Template | Tuning | Dirt]",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997-swb-add-on-replace-livery-extras-template-tuning-dirt",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/nissan-patrol-super-safari-y60-1997-swb-add-on-replace-livery-extras-template-tuning-dirt/2b65e6-201880610103120_1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997-swb-add-on-replace-livery-extras-template-tuning-dirt/download/50991",
+      "possible_spawn_names_not_verified": [
+        "patrolswb1",
+        "patrolswb2",
+        "patrolswb3"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سوبر سفاري 2017",
+      "original_title": "Nissan Patrol Super Safari VTC Y61 4800 2017 LWB [Add-On | Replace | Livery | Extras | Dirt | Template]",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-vtc-y61-4800-2017-4-door-add-on-replace-livery-extras-dirt-template",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/nissan-patrol-super-safari-vtc-y61-4800-2017-4-door-add-on-replace-livery-extras-dirt-template/c09e3a-GTA5%202017-12-16%2023-43-27-31.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-vtc-y61-4800-2017-4-door-add-on-replace-livery-extras-dirt-template/download/39640",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سفاري توربو 2016",
+      "original_title": "Nissan Patrol Safari VTC 4800 Turbo Y61 2016 2-door  [Add-On | Replace | Livery | Extras | Template]",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-safari-vtc-turbo-y61-2016-2-door-add-on-replace-livery-extras-template",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/nissan-patrol-safari-vtc-turbo-y61-2016-2-door-add-on-replace-livery-extras-template/04f153-GTA5%202017-09-26%2013-57-32-78.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/nissan-patrol-safari-vtc-turbo-y61-2016-2-door-add-on-replace-livery-extras-template/download/35204",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "شيفروليه تاهو",
+      "original_title": "Chevrolet Tahoe [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/chevrolet-tahoe-add-on-replace",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/chevrolet-tahoe-add-on-replace/dce7aa-0_168f19_84c6c79e_XXXL.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/chevrolet-tahoe-add-on-replace/download/9312",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "شيفروليه تاهو 2015",
+      "original_title": "2015 Chevrolet Tahoe [Add-On / Replace | Unlocked]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2015-chevrolet-tahoe-unlocked",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2015-chevrolet-tahoe-unlocked/ffd124-ztahoe1.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2015-chevrolet-tahoe-unlocked/download/24991",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "شيفروليه تاهو 2014",
+      "original_title": "2014 Chevrolet Tahoe [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/non-els-2014-chevrolet-tahoe",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/non-els-2014-chevrolet-tahoe/85bc76-c192fece80984b0e4e430576b8aeb563.jpg.37b48da0f2e53a46403cba527d4da9a4.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/non-els-2014-chevrolet-tahoe/download/94220",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "شيفروليه تاهو 2023",
+      "original_title": "Chevrolet Tahoe LS 2023 [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/chevrolet-tahoe-ls-2023-replace-add-on-fivem",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/chevrolet-tahoe-ls-2023-replace-add-on-fivem/58a55b-1.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/chevrolet-tahoe-ls-2023-replace-add-on-fivem/download/167415",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "جي إم سي يوكن دينالي 2023",
+      "original_title": "2023 GMC Yukon Denali [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/23-gmc-yukon-denali",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/23-gmc-yukon-denali/8877c8-gmc.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/23-gmc-yukon-denali/download/198460",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "جي إم سي يوكن 2008",
+      "original_title": "GMC Yukon 2008 [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/gmc-yukon-2008-addon-replace",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/gmc-yukon-2008-addon-replace/e283ba-GTA5l2.jpeg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/gmc-yukon-2008-addon-replace/download/134770",
+      "possible_spawn_names_not_verified": [
+        "baloch1"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "جي إم سي يوكن دينالي 2015",
+      "original_title": "2015 GMC Yukon Denali [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2015-gmc-yukon-denali",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2015-gmc-yukon-denali/6c1b3d-GTA5-2016-05-15-11-56-45-21.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2015-gmc-yukon-denali/download/13732",
+      "possible_spawn_names_not_verified": [
+        "gmcyd"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "جيب رانجلر روبيكون 2021",
+      "original_title": "Jeep Wrangler Rubicon 2021 [Add-On | Tuning]",
+      "source_page": "https://www.gta5-mods.com/vehicles/jeep-wrangler-rubicon-2021-add-on-tuning",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/jeep-wrangler-rubicon-2021-add-on-tuning/53ef3b-20230107125439_1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/jeep-wrangler-rubicon-2021-add-on-tuning/download/148167",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "جيب رانجلر روبيكون 2024",
+      "original_title": "2024 Jeep Wrangler Rubicon [Addon | FiveM]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2024-jeep-wrangler-rubicon-addon-fivem-unlocked",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2024-jeep-wrangler-rubicon-addon-fivem-unlocked/b917f7-1.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2024-jeep-wrangler-rubicon-addon-fivem-unlocked/download/185724",
+      "possible_spawn_names_not_verified": [
+        "rubicon24"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "جيب جراند شيروكي سوميت 2022",
+      "original_title": "Jeep Grand Cherokee Summit 2022 [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/jeep-grand-cherokee-summit-2022-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/jeep-grand-cherokee-summit-2022-add-on/5f3434-20250424055919_1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/jeep-grand-cherokee-summit-2022-add-on/download/183332",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "هيونداي سوناتا 2024",
+      "original_title": "Hyundai Sonata 2024 [Add-On | Template]",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2024-add-on-template-hq",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/hyundai-sonata-2024-add-on-template-hq/ce12a6-1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2024-add-on-template-hq/download/197013",
+      "possible_spawn_names_not_verified": [
+        "snt24"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "هيونداي سوناتا 2018",
+      "original_title": "Hyundai Sonata 2018 [Add-on]",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2018-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/hyundai-sonata-2018-add-on/ce4e54-20180121030304_1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2018-add-on/download/41749",
+      "possible_spawn_names_not_verified": [
+        "sont18",
+        "is"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "هيونداي سوناتا 2016",
+      "original_title": "Hyundai Sonata 2016 [ Tuning / Rims / Add-On / FiveM ]",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2016-tuning-rims-add-on-fivem",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/hyundai-sonata-2016-tuning-rims-add-on-fivem/ae7d07-Grand_Theft_Auto_V_13_10_45_09_26_35_.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2016-tuning-rims-add-on-fivem/download/169014",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "هيونداي سوناتا 2020",
+      "original_title": "Hyundai Sonata Standard 2020 [Add-On / Replace | FiveM]",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-sonata-standard-2020-add-on-fivem-replace",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/hyundai-sonata-standard-2020-add-on-fivem-replace/b07872-vlcsnap-2021-10-12-23h48m39s953.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/hyundai-sonata-standard-2020-add-on-fivem-replace/download/132035",
+      "possible_spawn_names_not_verified": [
+        "so20"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "هيونداي إلنترا 2021",
+      "original_title": "Hyundai Elantra 2021 |Beta| [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-elantra-2021-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/hyundai-elantra-2021-add-on/f01965-111.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/hyundai-elantra-2021-add-on/download/135066",
+      "possible_spawn_names_not_verified": [
+        "elantrang"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "هيونداي إلنترا N 2024",
+      "original_title": "2024 Hyundai Elantra Avante N [Add-On / Replace]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2024-hyundai-elantra-avante-n-addon-replace",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2024-hyundai-elantra-avante-n-addon-replace/68e726-8.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2024-hyundai-elantra-avante-n-addon-replace/download/189335",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "كيا سبورتاج 2022",
+      "original_title": "2022 Kia Sportage [Add-On / FiveM]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2022-kia-sportage-add-on-fivem-92d90b6f-9eac-4c73-be75-e3a9d34e1c30",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2022-kia-sportage-add-on-fivem-92d90b6f-9eac-4c73-be75-e3a9d34e1c30/a2b81c-sportage1.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2022-kia-sportage-add-on-fivem-92d90b6f-9eac-4c73-be75-e3a9d34e1c30/download/146009",
+      "possible_spawn_names_not_verified": [
+        "sportage"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "كيا سبورتاج 2024",
+      "original_title": "2024 Kia Sportage SX Prestige (Add-On)",
+      "source_page": "https://www.gta5-mods.com/vehicles/2024-kia-sportage-sx-prestige-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2024-kia-sportage-sx-prestige-add-on/0ab521-461737112_1255089535498649_389743479922359694_n.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2024-kia-sportage-sx-prestige-add-on/download/175843",
+      "possible_spawn_names_not_verified": [
+        "sportage"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "كيا ستينجر 2022",
+      "original_title": "Kia Stinger 2022 [Add-On / FiveM]",
+      "source_page": "https://www.gta5-mods.com/vehicles/kia-stinger-2022-add-on-fivem",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/kia-stinger-2022-add-on-fivem/154e2f-6.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/kia-stinger-2022-add-on-fivem/download/186090",
+      "possible_spawn_names_not_verified": [
+        "22stinger"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2012",
+      "original_title": "2012 BMW M5 f10 [Add-On | Replace | Tuning | Animated]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2012-bmw-m5-f10-add-on-replace-animated",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2012-bmw-m5-f10-add-on-replace-animated/952604-1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2012-bmw-m5-f10-add-on-replace-animated/download/29771",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2018",
+      "original_title": "BMW M5 F90 2018 (Stock & LibertyWalk) [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/bmw-m5-f90-2018-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/bmw-m5-f90-2018-add-on/1bc123-0_19709d_8f6d0dbb_XXXL.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/bmw-m5-f90-2018-add-on/download/41390",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2022",
+      "original_title": "2022 BMW M5 Saloon [Add-On]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2022-bmw-m5-saloon-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2022-bmw-m5-saloon-add-on/364fcb-1.png",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2022-bmw-m5-saloon-add-on/download/133190",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2025",
+      "original_title": "2025 BMW M5 Sedan [Add-On | Legacy/Enhanced]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2025-bmw-m5-sedan-add-on",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2025-bmw-m5-sedan-add-on/68f858-1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2025-bmw-m5-sedan-add-on/download/192223",
+      "possible_spawn_names_not_verified": [
+        "bms5"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 G90",
+      "original_title": "BMW M5 G90 [Add-On | Legacy | Enhanced]",
+      "source_page": "https://www.gta5-mods.com/vehicles/bmw-m5-g90-add-on-legacy-enhanced",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/bmw-m5-g90-add-on-legacy-enhanced/e4c9c3-1.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/bmw-m5-g90-add-on-legacy-enhanced/download/198060",
+      "possible_spawn_names_not_verified": [
+        "m5g90"
+      ],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2021",
+      "original_title": "BMW M5 2021 [Add-On | Tuning]",
+      "source_page": "https://www.gta5-mods.com/vehicles/2021m5",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2021m5/d0d309-QQ%E5%9B%BE%E7%89%8720201216145506.jpg",
+      "original_download_landing_url": "https://www.gta5-mods.com/vehicles/2021m5/download/106699",
+      "possible_spawn_names_not_verified": [],
+      "verified_page_and_image_metadata": true,
+      "direct_zip_verified": false,
+      "zip_sha256_verified": false,
+      "ios_install_tested": false,
+      "permission_to_redistribute_confirmed": false,
+      "visibility": "research_only"
+    }
+  ],
+  "unverified": [
+    {
+      "name_ar": "جيب جراند شيروكي تراك هوك",
+      "source_page": "https://www.gta5-mods.com/vehicles/jeep-grand-cherokee-srt-8-trackhawk-add-on-replace",
+      "reason": "missing original title/preview"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 E60",
+      "source_page": "https://www.gta5-mods.com/vehicles/bmw-m5-e60",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "بي إم دبليو M3 2016",
+      "source_page": "https://www.gta5-mods.com/vehicles/2015-bmw-m3-f80-add-on-tuning-analog-digital-dials",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "بي إم دبليو X5 2014",
+      "source_page": "https://www.gta5-mods.com/vehicles/2014-bmw-x5",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "بي إم دبليو X5 2019",
+      "source_page": "https://www.gta5-mods.com/vehicles/2019-bmw-x5-g05-add-on",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "بي إم دبليو X5 2024",
+      "source_page": "https://www.gta5-mods.com/vehicles/2024-bmw-x5-add-on-replace",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "مرسيدس بنز E63 AMG 2013",
+      "source_page": "https://www.gta5-mods.com/vehicles/2013-mercedes-benz-e63-amg-add-on-replace-template",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "مرسيدس E63 S 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/2018-mercedes-amg-e63-s-4matic-w213-add-on-ahmeda1999",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "مرسيدس AMG G63 2022",
+      "source_page": "https://www.gta5-mods.com/vehicles/2022-mercedes-amg-g63-add-on",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "مرسيدس AMG G63 2019",
+      "source_page": "https://www.gta5-mods.com/vehicles/mercedes-benz-amg-g63-2019-add-on-replace",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "مرسيدس G63 ستة عجلات",
+      "source_page": "https://www.gta5-mods.com/vehicles/mercedes-benz-g63-amg-6x6-add-on-tuning-template",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "فورد إف 150 رابتور",
+      "source_page": "https://www.gta5-mods.com/vehicles/ford-f-150-raptor-add-on",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "فورد إف 150 رابتور 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/2018-ford-f-150-raptor-crew-cab-oiv-add-on-tuning-fivem",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "فورد إف 150 رابتور R 2025",
+      "source_page": "https://www.gta5-mods.com/vehicles/2025-ford-f-150-raptor-r-addon-tuning",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "هوندا أكورد 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/honda-accord-2018-standard",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "هوندا أكورد 2021",
+      "source_page": "https://www.gta5-mods.com/vehicles/2021-honda-accord-2-0t-sport-add-on-jrem7315-przemo",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "هوندا أكورد 2004",
+      "source_page": "https://www.gta5-mods.com/vehicles/2004-honda-accord-replace",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "دودج تشارجر هيلكات 2015",
+      "source_page": "https://www.gta5-mods.com/vehicles/dodge-charger-hellcat-2015-addon-fivem",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 300 معدل",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-criuser-lc300-modified-oiv-add-on-gaminghorizon-mods",
+      "reason": "HTTP Error 429: Too Many Requests"
+    }
+  ]
+}
