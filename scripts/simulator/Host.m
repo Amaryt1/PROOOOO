@@ -59,7 +59,7 @@ static UIView *label(UIView *v, NSString *value){
  [super viewDidAppear:animated];dispatch_after(dispatch_time(DISPATCH_TIME_NOW,NSEC_PER_SEC),dispatch_get_main_queue(),^{[self check];});
 }
 -(void)check{
- if(!label(self.view,@"Kit Active · Build 8") || !label(self.view,@"أهلًا بك في AMAR YT")){record(@"FAIL attachment or welcome");return;}
+ if(label(self.view,@"Kit Active") || !label(self.view,@"أهلًا بك في AMAR YT")){record(@"FAIL visible debug badge or missing welcome");return;}
  for(NSString *name in @[@"social-instagram",@"social-telegram",@"social-tiktok"]){
   if(!match(self.view,^BOOL(UIView *v){return [v.accessibilityIdentifier isEqual:name];})){record(@"FAIL social button");return;}
  }
@@ -75,7 +75,7 @@ static UIView *label(UIView *v, NSString *value){
  [(UIButton*)[self.view viewWithTag:99] sendActionsForControlEvents:UIControlEventTouchUpInside];if(_plays!=1){record(@"FAIL fixture PLAY action");return;}
  [store sendActionsForControlEvents:UIControlEventTouchUpInside];
  if(!match(self.view,^BOOL(UIView *v){return [v isKindOfClass:NSClassFromString(@"WKWebView")];})){record(@"FAIL catalog");return;}
- record(@"PASS native welcome, dismiss-only, three social actions, four full-width labels, top-brand sidebar hit test, catalog open and original fixture PLAY action");
+ record(@"PASS native welcome, hidden diagnostics, dismiss-only, social actions, full-width labels, sidebar hit-test, catalog and original fixture PLAY action");
 }
 @end
 @interface Host:UIResponder<UIApplicationDelegate>
