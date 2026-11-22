@@ -5,6 +5,7 @@ on:
       - 'mods.json'
       - 'source/policy.js'
       - 'scripts/test.js'
+      - 'scripts/inspect_dlc_zip.py'
       - '.github/workflows/validate-live-catalog.yml'
   workflow_dispatch:
 permissions:
@@ -16,6 +17,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: node scripts/test.js
+      - name: Validate future DLC ZIP format inspector (safe synthetic fixtures)
+        run: |
+          python3 -m py_compile scripts/inspect_dlc_zip.py
+          python3 - <<'PY'
+          import pathlib, zipfile, tempfile, subprocess, sys, json
+          with tempfile.TemporaryDirectory() as d:
+            good=pathlib.Path(d)/"good.zip"
+            bad=pathlib.Path(d)/"loose-stream.zip"
+            with zipfile.ZipFile(good,'w',zipfile.ZIP_DEFLATED) as z:
+              z.writestr('update/x64/dlcpacks/testcar/dlc.rpf',b'7FPR'+b'\x00'*256)
+            with zipfile.ZipFile(bad,'w',zipfile.ZIP_DEFLATED) as z:
+              z.writestr('stream/testcar.yft',b'RSC7'+b'\x00'*256)
+            ok=subprocess.run([sys.executable,'scripts/inspect_dlc_zip.py',str(good)],capture_output=True,text=True)
+            assert ok.returncode==0,ok.stderr
+            assert 'testcar' in json.loads(ok.stdout)['dlc_packs']
+            fail=subprocess.run([sys.executable,'scripts/inspect_dlc_zip.py',str(bad)],capture_output=True,text=True)
+            assert fail.returncode!=0,fail.stdout
+            print('DLC ZIP validator passed positive/negative safety tests')
+          PY
       - name: Check every archive URL matches a released ZIP
         run: |
           python3 - <<'PY'
