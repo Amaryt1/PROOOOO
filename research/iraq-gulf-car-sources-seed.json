@@ -1,0 +1,428 @@
+{
+  "schema": 1,
+  "goal": 50,
+  "count_seeded": 70,
+  "disclaimer_ar": "روابط صفحات مودات أصلية، وليست روابط ZIP مباشرة أو مودات مجربة على الآيباد. سيجري التحقق من الصفحة والصورة واسم التوليد إن وجد.",
+  "vehicles": [
+    {
+      "name_ar": "سمند سورن",
+      "source_page": "https://www.gta5-mods.com/vehicles/ikco-samand-soren-animated-oiv-add-on-body-kit-hq",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس GLX 2021",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2021-add-on-fivem",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس GLX 2020",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-double-glx-2020-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس GLX 2016",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2016-2017-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس روكو 2021",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-revo-rocco-2021-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا هايلوكس ريفو 2.8",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-revo-2-8-cruisetronic-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا برادو 150",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-prado-150",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر GXR 2020",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-gxr-2020-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر GXR 2016",
+      "source_page": "https://www.gta5-mods.com/vehicles/land-cruiser-gxr-2016-add-on-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر VXR 2019",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-gxr-200-2019-add-on_locked",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر VXR 2016",
+      "source_page": "https://www.gta5-mods.com/vehicles/2016-land-cruiser-vxr",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 200 موديل 2016",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-200-2016",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 200",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-200-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 300 موديل 2021",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-2021-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 300 موديل 2022",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-2022-hq-dynamic-indicators-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 300 VX.R",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-cruiser-300-vx-r-add-on-legacy-enhanced",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا كامري 2005",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-camry-2005-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا كامري V50",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-camry-v50-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا إف جي كروزر VXR 2022",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-fj-cruiser-vxr-2022-add-on-fivem-unlocked",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا تندرا 2020 مصفحة",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-tundra-2020-armored-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "لكزس LX570 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/lexus-lx570-wald-2018-replace-add-on-alexhit",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سوبر سفاري 1997",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سوبر سفاري 1997 أربعة أبواب",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997-4-door-add-on-livery-extras-dirt-template",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سفاري 1997 بابين",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-y60-1997-swb-add-on-replace-livery-extras-template-tuning-dirt",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سوبر سفاري 2017",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-super-safari-vtc-y61-4800-2017-4-door-add-on-replace-livery-extras-dirt-template",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "نيسان باترول سفاري توربو 2016",
+      "source_page": "https://www.gta5-mods.com/vehicles/nissan-patrol-safari-vtc-turbo-y61-2016-2-door-add-on-replace-livery-extras-template",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "شيفروليه تاهو",
+      "source_page": "https://www.gta5-mods.com/vehicles/chevrolet-tahoe-add-on-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "شيفروليه تاهو 2015",
+      "source_page": "https://www.gta5-mods.com/vehicles/2015-chevrolet-tahoe-unlocked",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "شيفروليه تاهو 2014",
+      "source_page": "https://www.gta5-mods.com/vehicles/non-els-2014-chevrolet-tahoe",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "شيفروليه تاهو 2023",
+      "source_page": "https://www.gta5-mods.com/vehicles/chevrolet-tahoe-ls-2023-replace-add-on-fivem",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "جي إم سي يوكن دينالي 2023",
+      "source_page": "https://www.gta5-mods.com/vehicles/23-gmc-yukon-denali",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "جي إم سي يوكن 2008",
+      "source_page": "https://www.gta5-mods.com/vehicles/gmc-yukon-2008-addon-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "جي إم سي يوكن دينالي 2015",
+      "source_page": "https://www.gta5-mods.com/vehicles/2015-gmc-yukon-denali",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "جيب رانجلر روبيكون 2021",
+      "source_page": "https://www.gta5-mods.com/vehicles/jeep-wrangler-rubicon-2021-add-on-tuning",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "جيب رانجلر روبيكون 2024",
+      "source_page": "https://www.gta5-mods.com/vehicles/2024-jeep-wrangler-rubicon-addon-fivem-unlocked",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "جيب جراند شيروكي سوميت 2022",
+      "source_page": "https://www.gta5-mods.com/vehicles/jeep-grand-cherokee-summit-2022-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "جيب جراند شيروكي تراك هوك",
+      "source_page": "https://www.gta5-mods.com/vehicles/jeep-grand-cherokee-srt-8-trackhawk-add-on-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هيونداي سوناتا 2024",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2024-add-on-template-hq",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هيونداي سوناتا 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2018-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هيونداي سوناتا 2016",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-sonata-2016-tuning-rims-add-on-fivem",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هيونداي سوناتا 2020",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-sonata-standard-2020-add-on-fivem-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هيونداي إلنترا 2021",
+      "source_page": "https://www.gta5-mods.com/vehicles/hyundai-elantra-2021-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هيونداي إلنترا N 2024",
+      "source_page": "https://www.gta5-mods.com/vehicles/2024-hyundai-elantra-avante-n-addon-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "كيا سبورتاج 2022",
+      "source_page": "https://www.gta5-mods.com/vehicles/2022-kia-sportage-add-on-fivem-92d90b6f-9eac-4c73-be75-e3a9d34e1c30",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "كيا سبورتاج 2024",
+      "source_page": "https://www.gta5-mods.com/vehicles/2024-kia-sportage-sx-prestige-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "كيا ستينجر 2022",
+      "source_page": "https://www.gta5-mods.com/vehicles/kia-stinger-2022-add-on-fivem",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2012",
+      "source_page": "https://www.gta5-mods.com/vehicles/2012-bmw-m5-f10-add-on-replace-animated",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/bmw-m5-f90-2018-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2022",
+      "source_page": "https://www.gta5-mods.com/vehicles/2022-bmw-m5-saloon-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2025",
+      "source_page": "https://www.gta5-mods.com/vehicles/2025-bmw-m5-sedan-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 G90",
+      "source_page": "https://www.gta5-mods.com/vehicles/bmw-m5-g90-add-on-legacy-enhanced",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 2021",
+      "source_page": "https://www.gta5-mods.com/vehicles/2021m5",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M5 E60",
+      "source_page": "https://www.gta5-mods.com/vehicles/bmw-m5-e60",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو M3 2016",
+      "source_page": "https://www.gta5-mods.com/vehicles/2015-bmw-m3-f80-add-on-tuning-analog-digital-dials",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو X5 2014",
+      "source_page": "https://www.gta5-mods.com/vehicles/2014-bmw-x5",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو X5 2019",
+      "source_page": "https://www.gta5-mods.com/vehicles/2019-bmw-x5-g05-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "بي إم دبليو X5 2024",
+      "source_page": "https://www.gta5-mods.com/vehicles/2024-bmw-x5-add-on-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "مرسيدس بنز E63 AMG 2013",
+      "source_page": "https://www.gta5-mods.com/vehicles/2013-mercedes-benz-e63-amg-add-on-replace-template",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "مرسيدس E63 S 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/2018-mercedes-amg-e63-s-4matic-w213-add-on-ahmeda1999",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "مرسيدس AMG G63 2022",
+      "source_page": "https://www.gta5-mods.com/vehicles/2022-mercedes-amg-g63-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "مرسيدس AMG G63 2019",
+      "source_page": "https://www.gta5-mods.com/vehicles/mercedes-benz-amg-g63-2019-add-on-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "مرسيدس G63 ستة عجلات",
+      "source_page": "https://www.gta5-mods.com/vehicles/mercedes-benz-g63-amg-6x6-add-on-tuning-template",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "فورد إف 150 رابتور",
+      "source_page": "https://www.gta5-mods.com/vehicles/ford-f-150-raptor-add-on",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "فورد إف 150 رابتور 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/2018-ford-f-150-raptor-crew-cab-oiv-add-on-tuning-fivem",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "فورد إف 150 رابتور R 2025",
+      "source_page": "https://www.gta5-mods.com/vehicles/2025-ford-f-150-raptor-r-addon-tuning",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هوندا أكورد 2018",
+      "source_page": "https://www.gta5-mods.com/vehicles/honda-accord-2018-standard",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هوندا أكورد 2021",
+      "source_page": "https://www.gta5-mods.com/vehicles/2021-honda-accord-2-0t-sport-add-on-jrem7315-przemo",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "هوندا أكورد 2004",
+      "source_page": "https://www.gta5-mods.com/vehicles/2004-honda-accord-replace",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "دودج تشارجر هيلكات 2015",
+      "source_page": "https://www.gta5-mods.com/vehicles/dodge-charger-hellcat-2015-addon-fivem",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    },
+    {
+      "name_ar": "تويوتا لاندكروزر 300 معدل",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-land-criuser-lc300-modified-oiv-add-on-gaminghorizon-mods",
+      "source_platform": "GTA5-Mods.com",
+      "installation_status": "research_only"
+    }
+  ]
+}
