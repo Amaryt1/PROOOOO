@@ -11,6 +11,28 @@
   ],
   "mods": [
     {
+      "id": "hilux21-tele",
+      "name": "تويوتا هايلوكس 2021 — TELE • @AMARYT",
+      "description": "نسخة اختبار: هايلوكس GLX 2021 مع كتابة TELE • @AMARYT على خامة الزجاج. قد يظهر النص على أكثر من نافذة. لم يكتمل اختبار ظهور الكتابة داخل اللعبة.",
+      "category": "السيارات",
+      "image": "https://img.gta5-mods.com/q75/images/toyota-hilux-glx-2021-add-on-fivem/5200b0-374211494_829221631913744_2043670646105742635_n.jpg",
+      "minKit": 5,
+      "maxKit": 5,
+      "compatibility": "RPF7 DLC حقيقي؛ اجتاز فحص الأرشيف، لكن لم يختبر التوليد وموضع النص على iOS.",
+      "archiveURL": "https://github.com/Amaryt1/PROOOOO/releases/download/amaryt-hilux21-tele-v1/AMARYT-HILUX-2021-TELE-BETA.zip",
+      "archiveSize": 19513969,
+      "archiveSha256": "4892ba9988dd59c7c9fa4f34ebd88e093992168e9930eae8e0b16fedfe2fca88",
+      "expectedMods": [
+        "hilux21"
+      ],
+      "version": "1.0-beta",
+      "featured": true,
+      "installMode": "native",
+      "archiveFormat": "zip",
+      "sourcePage": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2021-add-on-fivem",
+      "originalAuthor": "omardr"
+    },
+    {
       "id": "iraqi-garage-3",
       "name": "Iraqi Garage — سايبة + بيجو 405 + تشارجر",
       "description": "حزمة السيارات الثلاث التي نجح استيرادها داخل GTA V.",
