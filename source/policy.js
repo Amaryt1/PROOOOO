@@ -38,11 +38,8 @@ function validFiles(files) {
 }
 function validArchive(m) {
  const remote='archiveURL' in m;
- const bundled='bundleArchive' in m;
- if(!remote && !bundled)return false;
- if(remote && bundled)return false;
+ if(!remote || 'bundleArchive' in m)return false;
  if(remote && (!url(m.archiveURL) || !/\.zip(?:[?#]|$)/i.test(m.archiveURL)))return false;
- if(bundled && m.bundleArchive!=='pilot-cars.zip')return false;
  if(!int(m.archiveSize) || m.archiveSize>536870912 || typeof m.archiveSha256!=='string' || !/^[a-f0-9]{64}$/.test(m.archiveSha256))return false;
  return true;
 }
