@@ -76,7 +76,7 @@ function image(url,host,cls){if(typeof url!=='string'||!/^https:\/\//i.test(url)
 function sizeLabel(m){let n=Number(m.archiveSize);if(!Number.isFinite(n)||n<=0){const f=m.files||[{size:m.size}];n=f.reduce((v,f)=>v+(Number(f.size)||0),0)}return n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB'}
 function preferred(m){return has(m.id,state.installed)?'installed':has(m.id,state.downloaded)?'downloaded':''}
 function mode(k){section=k;draw()}
-function top(app){const head=$('header',app);const brand=$('div',head);$('div',brand,'brand','AMAR YT');$('div',brand,'tagline','عالم الإضافات بين يديك');click('↻ تحديث',head,'smallbtn',()=>post('refreshMods'));click('×',head,'close',()=>post('close')).setAttribute('aria-label','إغلاق المتجر')}
+function renderHeader(app){const head=$('header',app);const brand=$('div',head);$('div',brand,'brand','AMAR YT');$('div',brand,'tagline','عالم الإضافات بين يديك');click('↻ تحديث',head,'smallbtn',()=>post('refreshMods'));click('×',head,'close',()=>post('close')).setAttribute('aria-label','إغلاق المتجر')}
 function menu(app){const nav=$('nav',app);for(const [id,label] of [['home','الرئيسية'],['all','كل المودات'],['downloaded','تحميلاتي'],['installed','المثبتة'],['favorites','المفضلة'],['updates','التحديثات'],['news','الأخبار']]){const b=click(label,nav,section===id?'active':'',()=>mode(id));b.setAttribute('aria-pressed',String(section===id))}}
 function empty(host,title,body){const e=$('div',host,'empty');$('strong',e,'','◈');$('div',e,'',title);if(body)$('div',e,'',body);return e}
 function sectionHeading(host,title){$('div',host,'sectionTitle',title)}
@@ -141,7 +141,7 @@ function mainContent(target){
 function draw(){
  if(!state)return;const app=document.querySelector('#app');app.textContent='';
  if(state.kind!=='catalog')return noticePanel(app);
- top(app);menu(app);
+ renderHeader(app);menu(app);
  const area=$('div',app,'scroll'),body=$('div',area,'body');
  if(state.status){const bar=$('div',body,'notice',state.status);bar.setAttribute('role','status')}
  if(state.busy)click('إلغاء التنزيل',body,'pill',()=>post('cancelDownload'));
