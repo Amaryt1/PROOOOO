@@ -1,0 +1,32 @@
+name: Remove obsolete experimental vehicle ZIP release
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cleanup-legacy-vehicle-release.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  delete-only-old-experimental-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Remove the old Nissan, Dodge and Lamborghini ZIP bundles
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: Amaryt1/PROOOOO
+        run: |
+          set -euo pipefail
+          obsolete=amaryt-vehicle-zip-test-v1
+          preserved=iraqi-garage-3cars-v1
+          gh release view "$preserved" >/dev/null
+          if gh release view "$obsolete" >/dev/null 2>&1; then
+            gh release delete "$obsolete" --cleanup-tag --yes
+            echo "Deleted obsolete release $obsolete"
+          else
+            echo "Obsolete release already absent"
+          fi
+          gh release view "$preserved" >/dev/null
+          echo "Preserved tested Iraqi Garage release"
