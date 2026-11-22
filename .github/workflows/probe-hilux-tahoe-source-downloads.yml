@@ -45,7 +45,6 @@ jobs:
                 text=head.decode('utf-8','replace')
                 l=Links();l.feed(text)
                 print('candidate_links',l.out[:35],flush=True)
-                for pattern in [r'<meta[^>]*http-equiv[^>]*refresh[^>]*>',r'https?://[^\s\"\\']+\.zip[^\s\"\\']*',r'window\\.location.{0,300}']:
-                 print('matches',pattern,re.findall(pattern,text,re.I)[:5],flush=True)
+                print('html_snippet',text[:300],flush=True)
             except Exception as e:print(method,'ERR',repr(e)[:400],flush=True)
           PY
