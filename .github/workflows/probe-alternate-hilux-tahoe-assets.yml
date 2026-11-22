@@ -1,0 +1,43 @@
+name: Find actual Hilux and Tahoe archives from original download destinations
+on:
+  push:
+    paths: ['.github/workflows/probe-alternate-hilux-tahoe-assets.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Check source download endpoints and formats
+        run: |
+          python3 - <<'PY'
+          import urllib.request,urllib.parse,re,html
+          from html.parser import HTMLParser
+          urls={
+           'hilux_modshost':'https://modshost.co/download/goi3g55obze228u835j599/',
+           'hilux_gta5modnet':'https://gta5mod.net/download-mod/137020',
+           'tahoe_modland':'https://www.modland.net/gta-5-mods/vehicles/cars/2015-chevrolet-tahoe.html',
+          }
+          hdr={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/zip,application/octet-stream,*/*'}
+          class A(HTMLParser):
+           def __init__(self):super().__init__();self.h=[]
+           def handle_starttag(self,tag,a):
+            if tag=='a':
+             h=dict(a).get('href')
+             if h and ('download' in h or '.zip' in h or '.rar' in h or 'getfile' in h):self.h.append(h)
+          for title,url in urls.items():
+           print('\nPROBE',title,url,flush=True)
+           for method in ('HEAD','GET'):
+            try:
+             with urllib.request.urlopen(urllib.request.Request(url,headers=hdr,method=method),timeout=22) as r:
+              t=r.headers.get('content-type','')
+              print('METHOD',method,'URL',r.url,'MIME',t,'SIZE',r.headers.get('content-length'),'DISP',r.headers.get('content-disposition'),flush=True)
+              if method=='GET':
+               chunk=r.read(180000)
+               print('HEADBYTES',repr(chunk[:20]),flush=True)
+               if 'html' in t:
+                page=chunk.decode('utf-8','replace');p=A();p.feed(page)
+                print('LINKS',p.h[:40],flush=True)
+            except Exception as e:print('ERROR',method,repr(e)[:240],flush=True)
+          PY
