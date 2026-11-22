@@ -195,7 +195,7 @@ static AMARYTKit *kit;
 }
 -(void)render{
  if(!self.ready || !self.kind)return;
- NSDictionary *state=@{@"kind":self.kind,@"config":self.config,@"version":@(kitVersion),@"catalog":self.catalog?:@{@"categories":@[],@"mods":@[]},@"favorites":[prefs() arrayForKey:key(@"favorites")]?:@[],@"downloaded":[self downloaded],@"installed":[self installed],@"busy":@(self.transfer!=nil),@"connection":self.connection?:@"",@"build":@"9",@"status":self.status?:@"",@"last":@([prefs() doubleForKey:key(@"last")])};
+ NSDictionary *state=@{@"kind":self.kind,@"config":self.config,@"version":@(kitVersion),@"catalog":self.catalog?:@{@"categories":@[],@"mods":@[]},@"favorites":[prefs() arrayForKey:key(@"favorites")]?:@[],@"downloaded":[self downloaded],@"installed":[self installed],@"updates":[self availableUpdates],@"busy":@(self.transfer!=nil),@"connection":self.connection?:@"",@"build":@"9",@"status":self.status?:@"",@"last":@([prefs() doubleForKey:key(@"last")])};
  NSData *data=[NSJSONSerialization dataWithJSONObject:state options:0 error:nil];
  NSString *json=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
  WKWebView *web=self.panel;if(json)[web evaluateJavaScript:[NSString stringWithFormat:@"render(%@)",json] completionHandler:^(id result,NSError *error){if(error && self.panel==web)[self nativePanel];}];
@@ -489,6 +489,19 @@ static BOOL regularFolder(NSURL *url){
    NSDictionary *a=[NSFileManager.defaultManager attributesOfItemAtPath:[dir URLByAppendingPathComponent:file[@"name"]].path error:nil];
    if(![a.fileType isEqual:NSFileTypeRegular] || a.fileSize!=[file[@"size"] unsignedLongLongValue]){present=NO;break;}
   }if(present)[result addObject:dir.lastPathComponent];
+ }return result;
+}
+-(NSArray*)availableUpdates{
+ NSMutableArray *result=[NSMutableArray new];
+ for(NSDictionary *mod in self.catalog[@"mods"]?:@[]){
+  NSString *identifier=mod[@"id"];NSString *checksum=mod[@"archiveSha256"];
+  if(!identifier.length || !checksum.length)continue;
+  NSURL *folder=[modRoot() URLByAppendingPathComponent:identifier isDirectory:YES];
+  NSArray *receipt=[NSArray arrayWithContentsOfURL:[folder URLByAppendingPathComponent:@".amar-files.plist"]];
+  if(!receipt.count)continue;
+  BOOL matches=NO;
+  for(NSDictionary *old in receipt)if([old[@"sha256"] isEqualToString:checksum]){matches=YES;break;}
+  if(!matches)[result addObject:identifier];
  }return result;
 }
 -(void)finishTransfer:(NSString*)status{
