@@ -489,7 +489,11 @@ static BOOL regularFolder(NSURL *url){
    ok=regularFolder(dst) && [[NSArray arrayWithContentsOfURL:[dst URLByAppendingPathComponent:@".amar-files.plist"]] count]>0 &&
       [fm replaceItemAtURL:dst withItemAtURL:self.stage backupItemName:nil options:0 resultingItemURL:nil error:nil];
   }else if(ok)ok=[fm moveItemAtURL:self.stage toURL:dst error:nil];
-  [self finishTransfer:ok?@"اكتمل تنزيل كل ملفات المود والتحقق منها.":@"تعذّر حفظ مجلد المود."];return;
+  NSURL *archiveURL=nil;NSDictionary *completedMod=self.transfer;
+  if(ok && [self.files.firstObject[@"extension"] isEqual:@"zip"])archiveURL=[dst URLByAppendingPathComponent:self.files.firstObject[@"name"]];
+  [self finishTransfer:ok?@"تم التحميل والتحقق من الملفات.":@"تعذّر حفظ المود."];
+  if(archiveURL)[self importArchive:archiveURL forMod:completedMod];
+  return;
  }
  NSDictionary *file=self.files[self.fileIndex];NSURL *url=[NSURL URLWithString:file[@"url"]];
  if(!url.host.length || ![url.scheme.lowercaseString isEqual:@"https"]){[self finishTransfer:@"رابط الملف غير صالح."];return;}
@@ -498,13 +502,38 @@ static BOOL regularFolder(NSURL *url){
 }
 -(void)beginMod:(NSDictionary*)mod{
  if(self.transfer)return;
- self.files=mod[@"files"]?:@[@{@"name":[NSString stringWithFormat:@"%@.%@",mod[@"id"],mod[@"extension"]],@"url":mod[@"url"],@"size":mod[@"size"],@"sha256":mod[@"sha256"],@"extension":mod[@"extension"]}];
+ NSDictionary *archive=nil;
+ if([mod[@"archiveURL"] isKindOfClass:NSString.class] && [mod[@"archiveSize"] unsignedLongLongValue]>0){
+  archive=@{@"name":[mod[@"id"] stringByAppendingString:@".zip"],@"url":mod[@"archiveURL"],@"size":mod[@"archiveSize"],@"sha256":mod[@"archiveSha256"],@"extension":@"zip"};
+ }else if([mod[@"bundleArchive"] isEqual:@"pilot-cars.zip"]){
+  archive=@{@"name":@"pilot-cars.zip",@"url":@"bundle://pilot-cars.zip",@"size":mod[@"archiveSize"],@"sha256":mod[@"archiveSha256"],@"extension":@"zip"};
+ }
+ self.files=archive?@[archive]:(mod[@"files"]?:@[@{@"name":[NSString stringWithFormat:@"%@.%@",mod[@"id"],mod[@"extension"]],@"url":mod[@"url"],@"size":mod[@"size"],@"sha256":mod[@"sha256"],@"extension":mod[@"extension"]}]);
  NSURL *prior=[modRoot() URLByAppendingPathComponent:mod[@"id"]];
  NSArray *receipt=[NSArray arrayWithContentsOfURL:[prior URLByAppendingPathComponent:@".amar-files.plist"]];
  if([receipt isEqual:self.files] && [[self downloaded] containsObject:mod[@"id"]]){[self finishTransfer:@"كل ملفات هذه النسخة موجودة."];return;}
  self.stage=[[NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES] URLByAppendingPathComponent:NSUUID.UUID.UUIDString isDirectory:YES];
  if(![NSFileManager.defaultManager createDirectoryAtURL:self.stage withIntermediateDirectories:NO attributes:nil error:nil]){[self finishTransfer:@"تعذّر إنشاء مجلد التنزيل المؤقت."];return;}
- self.transfer=mod;self.fileIndex=0;[self nextFile];
+ self.transfer=mod;self.fileIndex=0;
+ if([mod[@"bundleArchive"] isEqual:@"pilot-cars.zip"]){
+  self.verifying=YES;self.status=@"جارٍ تجهيز حزمة السيارات…";[self render];
+  NSURL *source=asset(@"pilot-cars.zip"),*dst=[self.stage URLByAppendingPathComponent:self.files.firstObject[@"name"]];
+  NSDictionary *archiveFile=self.files.firstObject;
+  dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY,0),^{
+   BOOL ok=[NSFileManager.defaultManager copyItemAtURL:source toURL:dst error:nil];
+   if(ok){
+    unsigned long long total=[[[NSFileManager.defaultManager attributesOfItemAtPath:dst.path error:nil] objectForKey:NSFileSize] unsignedLongLongValue];
+    if(total!=[archiveFile[@"size"] unsignedLongLongValue])ok=NO;
+    NSInputStream *stream=[NSInputStream inputStreamWithURL:dst];[stream open];
+    CC_SHA256_CTX ctx;CC_SHA256_Init(&ctx);uint8_t bytes[65536],digest[CC_SHA256_DIGEST_LENGTH];NSInteger n=0;
+    while(ok && (n=[stream read:bytes maxLength:sizeof(bytes)])>0)CC_SHA256_Update(&ctx,bytes,(CC_LONG)n);
+    if(ok && n<0)ok=NO;[stream close];
+    if(ok){CC_SHA256_Final(digest,&ctx);NSMutableString *h=[NSMutableString new];for(int k=0;k<CC_SHA256_DIGEST_LENGTH;k++)[h appendFormat:@"%02x",digest[k]];ok=[h isEqualToString:archiveFile[@"sha256"]];}
+   }
+   dispatch_async(dispatch_get_main_queue(),^{self.verifying=NO;if(ok){self.fileIndex=self.files.count;[self nextFile];}else [self finishTransfer:@"تعذّر التحقق من الحزمة المدمجة."];});
+  });return;
+ }
+ [self nextFile];
 }
 -(void)URLSession:(NSURLSession*)s task:(NSURLSessionTask*)task willPerformHTTPRedirection:(NSHTTPURLResponse*)response newRequest:(NSURLRequest*)req completionHandler:(void (^)(NSURLRequest*))done{
  done([req.URL.scheme.lowercaseString isEqual:@"https"]?req:nil);
@@ -527,7 +556,7 @@ static BOOL saveMod(NSURL *tmp,NSDictionary *mod,NSURL *stage){
  NSInputStream *stream=[NSInputStream inputStreamWithURL:tmp];[stream open];
  unsigned char buf[65536],digest[CC_SHA256_DIGEST_LENGTH];CC_SHA256_CTX ctx;CC_SHA256_Init(&ctx);
  NSInteger n;BOOL header=NO;NSUInteger total=0;
- while((n=[stream read:buf maxLength:sizeof buf])>0){if(!total)header=n>=4 && !memcmp(buf,"RSC7",4);CC_SHA256_Update(&ctx,buf,(CC_LONG)n);total+=n;}
+ while((n=[stream read:buf maxLength:sizeof buf])>0){if(!total)header=n>=4 && ([mod[@"extension"] isEqual:@"zip"]?(!memcmp(buf,"PK\\003\\004",4)):(!memcmp(buf,"RSC7",4)));CC_SHA256_Update(&ctx,buf,(CC_LONG)n);total+=n;}
  [stream close];if(!header || n<0 || total!=size)return NO;
  CC_SHA256_Final(digest,&ctx);NSMutableString *sha=[NSMutableString new];for(unsigned i=0;i<sizeof digest;i++)[sha appendFormat:@"%02x",digest[i]];
  if(![sha isEqual:mod[@"sha256"]])return NO;
