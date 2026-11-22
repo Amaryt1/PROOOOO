@@ -97,9 +97,19 @@ static AMARYTKit *kit;
  }
  trace(self.config?@"config loaded and validated":@"config validation failed");
 }
+-(NSDictionary*)catalogWithPilot:(NSDictionary*)catalog{
+ if(![NSFileManager.defaultManager fileExistsAtPath:asset(@"pilot-cars.zip").path])return catalog;
+ NSDictionary *local=decode([NSData dataWithContentsOfURL:asset(@"mods.json")]);
+ if(![self valid:local mods:YES] || ![catalog[@"mods"] isKindOfClass:NSArray.class])return catalog;
+ NSDictionary *pilot=[local[@"mods"] firstObject];if(![pilot[@"bundleArchive"] isEqual:@"pilot-cars.zip"])return catalog;
+ for(NSDictionary *m in catalog[@"mods"])if([m[@"id"] isEqual:pilot[@"id"]])return catalog;
+ NSMutableDictionary *merged=[catalog mutableCopy];NSMutableArray *models=[NSMutableArray arrayWithObject:pilot];[models addObjectsFromArray:catalog[@"mods"]];
+ merged[@"mods"]=models;return merged;
+}
 -(void)loadMods{
  self.modsSource=self.config[@"modsURL"];NSDictionary *c=[prefs() dictionaryForKey:key(@"catalog")];
- self.catalog=[c[@"url"] isEqual:self.modsSource] && [self valid:c[@"value"] mods:YES]?c[@"value"]:decode([NSData dataWithContentsOfURL:asset(@"mods.json")]);
+ NSDictionary *base=[c[@"url"] isEqual:self.modsSource] && [self valid:c[@"value"] mods:YES]?c[@"value"]:decode([NSData dataWithContentsOfURL:asset(@"mods.json")]);
+ self.catalog=[self catalogWithPilot:base];
 }
 -(void)fetch:(BOOL)mods{
  NSString *url=mods?self.config[@"modsURL"]:configURL;
@@ -585,7 +595,7 @@ static BOOL saveMod(NSURL *tmp,NSDictionary *mod,NSURL *stage){
   if(ok){
    NSString *etag=@"";for(NSString *k in response.allHeaderFields)if([k caseInsensitiveCompare:@"etag"]==NSOrderedSame)etag=response.allHeaderFields[k];
    [prefs() setObject:@{@"url":request[@"url"],@"value":value,@"etag":etag} forKey:slot];
-   if(mods)self.catalog=value;else{self.config=value;if(self.modsSource && ![self.modsSource isEqual:value[@"modsURL"]]){[self loadMods];if([self.kind isEqual:@"catalog"])[self fetch:YES];}}
+   if(mods)self.catalog=[self catalogWithPilot:value];else{self.config=value;if(self.modsSource && ![self.modsSource isEqual:value[@"modsURL"]]){[self loadMods];if([self.kind isEqual:@"catalog"])[self fetch:YES];}}
   }
  }
  trace([NSString stringWithFormat:@"%@ HTTP %ld %@",mods?@"catalog":@"config",(long)code,ok?@"accepted":@"rejected"]);
