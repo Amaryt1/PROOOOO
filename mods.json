@@ -12,13 +12,13 @@
   "mods": [
     {
       "id": "nissan-gtr",
-      "name": "Nissan GT-R R35 — حزمة اختبار",
-      "description": "حزمة ملفات سيارة Nissan GT-R R35. للتحميل والاختبار؛ الاستيراد والظهور داخل اللعبة غير مثبتين. المصدر: Rymex47/free-modpack (MPL-2.0). غلاف توضيحي وليس لقطة شاشة للمود.",
+      "name": "Nissan GT-R R35",
+      "description": "سيارة رياضية مميزة.",
       "category": "السيارات",
       "image": "https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/images/mods/nissan-gtr.svg",
       "minKit": 5,
       "maxKit": 5,
-      "compatibility": "AMAR YT V5 / Build 8: ملفات RSC7 مُتحقَّق منها؛ التثبيت أو الظهور داخل اللعبة لم يُختبر.",
+      "compatibility": "مود سيارات للاستيراد؛ يعتمد نجاح الإضافة على دعم ملفات الحزمة.",
       "files": [
         {
           "name": "gtr.yft",
@@ -47,17 +47,23 @@
       "archiveContents": "stream/*.yft, stream/*.ytd, data/*.meta, LICENSE.txt, README.txt",
       "installationNote": "حزمة ZIP تجريبية للاستيراد اليدوي فقط؛ لا يُعد التنزيل تثبيتًا ولا يضمن دعم المستورد لهذه البنية.",
       "imageType": "illustration",
-      "sourceURL": "https://github.com/Rymex47/free-modpack"
+      "sourceURL": "https://github.com/Rymex47/free-modpack",
+      "archiveSize": 11487196,
+      "archiveSha256": "f287eb905f0fcad35abbe583f99a3ffa1bb928a89d27366b6a77670eafee42dc",
+      "version": "1.0",
+      "featured": false,
+      "installMode": "native",
+      "badge": "جديد"
     },
     {
       "id": "dodge-charger",
-      "name": "Dodge Charger 2018 — حزمة اختبار",
-      "description": "حزمة ملفات سيارة Dodge Charger 2018. للتنزيل والاختبار؛ قد يتطلب التثبيت إعدادات مركبة إضافية. المصدر: Rymex47/free-modpack (MPL-2.0). غلاف توضيحي وليس لقطة شاشة للمود.",
+      "name": "Dodge Charger 2018",
+      "description": "سيارة عضلية أمريكية.",
       "category": "السيارات",
       "image": "https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/images/mods/dodge-charger.svg",
       "minKit": 5,
       "maxKit": 5,
-      "compatibility": "AMAR YT V5 / Build 8: ملفات RSC7 مُتحقَّق منها؛ التثبيت أو الظهور داخل اللعبة لم يُختبر.",
+      "compatibility": "مود سيارات للاستيراد؛ يعتمد نجاح الإضافة على دعم ملفات الحزمة.",
       "files": [
         {
           "name": "sjdodge.yft",
@@ -86,17 +92,23 @@
       "archiveContents": "stream/*.yft, stream/*.ytd, data/*.meta, LICENSE.txt, README.txt",
       "installationNote": "حزمة ZIP تجريبية للاستيراد اليدوي فقط؛ لا يُعد التنزيل تثبيتًا ولا يضمن دعم المستورد لهذه البنية.",
       "imageType": "illustration",
-      "sourceURL": "https://github.com/Rymex47/free-modpack"
+      "sourceURL": "https://github.com/Rymex47/free-modpack",
+      "archiveSize": 13386501,
+      "archiveSha256": "2b85fa03ea019161e03d82a5202b6a5c2aed998cdfc800bb91754a04f40a6c58",
+      "version": "1.0",
+      "featured": true,
+      "installMode": "native",
+      "badge": "مميز"
     },
     {
       "id": "lamborghini-huracan",
-      "name": "Lamborghini Huracán 2018 — حزمة اختبار",
-      "description": "حزمة ملفات سيارة Lamborghini Huracán 2018. تنزيل وتحقق؛ لا تعني اكتمال التثبيت أو ظهور السيارة تلقائيًا. المصدر: Rymex47/free-modpack (MPL-2.0). غلاف توضيحي وليس لقطة شاشة للمود.",
+      "name": "Lamborghini Huracán",
+      "description": "سيارة سوبر رياضية.",
       "category": "السيارات",
       "image": "https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/images/mods/lamborghini-huracan.svg",
       "minKit": 5,
       "maxKit": 5,
-      "compatibility": "AMAR YT V5 / Build 8: ملفات RSC7 مُتحقَّق منها؛ التثبيت أو الظهور داخل اللعبة لم يُختبر.",
+      "compatibility": "مود سيارات للاستيراد؛ يعتمد نجاح الإضافة على دعم ملفات الحزمة.",
       "files": [
         {
           "name": "lp610.yft",
@@ -125,7 +137,13 @@
       "archiveContents": "stream/*.yft, stream/*.ytd, data/*.meta, LICENSE.txt, README.txt",
       "installationNote": "حزمة ZIP تجريبية للاستيراد اليدوي فقط؛ لا يُعد التنزيل تثبيتًا ولا يضمن دعم المستورد لهذه البنية.",
       "imageType": "illustration",
-      "sourceURL": "https://github.com/Rymex47/free-modpack"
+      "sourceURL": "https://github.com/Rymex47/free-modpack",
+      "archiveSize": 31754224,
+      "archiveSha256": "d16a186c70a2abb989b1d3813557c376c14e4f4763474581536fae47e81745fd",
+      "version": "1.0",
+      "featured": false,
+      "installMode": "native",
+      "badge": "جديد"
     }
   ],
   "fileFormat": "files-v1"
