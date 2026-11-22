@@ -1,0 +1,51 @@
+name: Probe two GTA V Add-On source ZIP downloads
+on:
+  push:
+    paths:
+      - '.github/workflows/probe-hilux-tahoe-source-downloads.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Inspect original first/second download paths with a normal HTTP session
+        run: |
+          python3 - <<'PY'
+          import urllib.request,urllib.error,http.cookiejar,re,html
+          from html.parser import HTMLParser
+          class Links(HTMLParser):
+           def __init__(self):super().__init__();self.out=[]
+           def handle_starttag(self,tag,attrs):
+            if tag!='a':return
+            d=dict(attrs);url=d.get('href','')
+            if url and ('download' in url or '.zip' in url or 'file' in url):self.out.append(url)
+          targets={
+           'hilux21':'https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2021-add-on-fivem/download/157225',
+           'tahoe2015':'https://www.gta5-mods.com/vehicles/2015-chevrolet-tahoe-unlocked/download/24991',
+           'tahoe2014':'https://www.gta5-mods.com/vehicles/non-els-2014-chevrolet-tahoe/download/94220',
+          }
+          headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/zip,application/octet-stream,*/*'}
+          cookies=http.cookiejar.CookieJar()
+          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookies))
+          for key,u in targets.items():
+           print('\\nCHECK',key,u,flush=True)
+           for method in ['HEAD','GET']:
+            try:
+             req=urllib.request.Request(u,headers=headers,method=method)
+             with opener.open(req,timeout=23) as f:
+              ctype=f.headers.get('content-type','')
+              print(method,'status',f.status,'finalurl',f.url,'type',ctype,'len',f.headers.get('content-length'),'cd',f.headers.get('content-disposition'),flush=True)
+              if method=='GET':
+               head=f.read(160000)
+               print('MAGIC',head[:32],flush=True)
+               if b'<html' in head[:500].lower() or 'html' in ctype:
+                text=head.decode('utf-8','replace')
+                l=Links();l.feed(text)
+                print('candidate_links',l.out[:35],flush=True)
+                for pattern in [r'<meta[^>]*http-equiv[^>]*refresh[^>]*>',r'https?://[^\s\"\\']+\.zip[^\s\"\\']*',r'window\\.location.{0,300}']:
+                 print('matches',pattern,re.findall(pattern,text,re.I)[:5],flush=True)
+            except Exception as e:print(method,'ERR',repr(e)[:400],flush=True)
+          PY
