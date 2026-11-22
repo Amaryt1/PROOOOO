@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "title": "سيارتا الاختبار: هايلوكس وتاهو",
+  "created_utc": "2026-11-22",
+  "publication_policy": "research_and_manual_archive_intake_only",
+  "note_ar": "أسماء عربية وروابط مصادر وصور حقيقية. هذه ليست ملفات ZIP مثبتة؛ لا تُضاف إلى mods.json حتى نمتلك ملف أرشيف قابل للفحص وحقوق نشر مناسبة ونجاح تجربة على الآيباد. المستخدم أكد عمل Iraqi Garage فقط.",
+  "cars": [
+    {
+      "id": "hilux21-test",
+      "name_ar": "تويوتا هايلوكس GLX 2021",
+      "original_title": "Toyota Hilux GLX 2021 [Add-On / FiveM]",
+      "category": "السيارات",
+      "author": "omardr",
+      "source_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2021-add-on-fivem",
+      "source_second_download_page": "https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2021-add-on-fivem/download/157225",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/toyota-hilux-glx-2021-add-on-fivem/5200b0-374211494_829221631913744_2043670646105742635_n.jpg",
+      "source_archive_format_reported": ".rar",
+      "model_spawn_name_from_author": "hilux21",
+      "expected_addon_directory_from_author": "hilux21",
+      "archiveURL": null,
+      "archiveSize": null,
+      "archiveSha256": null,
+      "has_verified_dlcrpf": false,
+      "has_verified_zip": false,
+      "ipad_tested": false,
+      "license_note": "المؤلف يمنع تعديل السيارة أو إزالة أجزائها؛ لا يُعاد نشر الملف أو إعادة حزمه دون التأكد من الترخيص أو إذن المؤلف.",
+      "status_ar": "فحص صفحة وصورة واسم توليد فقط؛ الأرشيف غير متاح للفحص الآلي"
+    },
+    {
+      "id": "tahoe-2015-test",
+      "name_ar": "شيفروليه تاهو 2015",
+      "original_title": "2015 Chevrolet Tahoe [Add-On / Replace | Unlocked] 3.0",
+      "category": "السيارات",
+      "author": "AuthorSaulAlan",
+      "source_page": "https://www.gta5-mods.com/vehicles/2015-chevrolet-tahoe-unlocked",
+      "source_second_download_page": "https://www.gta5-mods.com/vehicles/2015-chevrolet-tahoe-unlocked/download/24991",
+      "original_preview_url": "https://img.gta5-mods.com/q75/images/2015-chevrolet-tahoe-unlocked/ffd124-ztahoe1.png",
+      "source_archive_format_reported": "unknown; original publisher lists 11.6 MB",
+      "model_spawn_name_from_author": null,
+      "possible_addon_directory_unverified": "tahoe",
+      "archiveURL": null,
+      "archiveSize": null,
+      "archiveSha256": null,
+      "has_verified_dlcrpf": false,
+      "has_verified_zip": false,
+      "ipad_tested": false,
+      "license_note": "المؤلف يذكر جواز استخدام المود مع نسب الحقوق؛ التحقق من صلاحية إعادة الاستضافة ومن شروط الموقع ما يزال مطلوبًا.",
+      "status_ar": "فحص صفحة وصورة؛ ملف الإصدار Add-On لم يُقرأ بعد"
+    }
+  ],
+  "download_probes": [
+    {
+      "platform": "GTA5-Mods",
+      "result": "الرابط المنتهي بـ /download/<id> أعاد صفحة HTML الأصلية على GitHub Actions، وليس ZIP"
+    },
+    {
+      "platform": "ModsHost",
+      "result": "روابط المرآة جُربت من Actions وأعادت HTTP 403"
+    },
+    {
+      "platform": "gta5mod.net",
+      "result": "روابط المرآة جُربت من Actions وأعادت HTTP 403"
+    },
+    {
+      "platform": "ModLand",
+      "result": "رابط التاهو جُرب من Actions وأعاد HTTP 403"
+    }
+  ],
+  "installable_public_store_unchanged": true
+}
