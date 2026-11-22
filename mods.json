@@ -41,7 +41,13 @@
           "sha256": "1429023e4cb0734f93532fadf550d7d772ae050bfd8ce08678c1a8fd6de9000f",
           "extension": "ytd"
         }
-      ]
+      ],
+      "archiveURL": "https://github.com/Amaryt1/PROOOOO/releases/download/amaryt-vehicle-zip-test-v1/nissan-gtr.zip",
+      "archiveFormat": "zip",
+      "archiveContents": "stream/*.yft, stream/*.ytd, data/*.meta, LICENSE.txt, README.txt",
+      "installationNote": "حزمة ZIP تجريبية للاستيراد اليدوي فقط؛ لا يُعد التنزيل تثبيتًا ولا يضمن دعم المستورد لهذه البنية.",
+      "imageType": "illustration",
+      "sourceURL": "https://github.com/Rymex47/free-modpack"
     },
     {
       "id": "dodge-charger",
@@ -74,7 +80,13 @@
           "sha256": "90b2c5c54265c512ff0b6c231881fa4ae618d32860e64e40b9d843fec88b2bc0",
           "extension": "ytd"
         }
-      ]
+      ],
+      "archiveURL": "https://github.com/Amaryt1/PROOOOO/releases/download/amaryt-vehicle-zip-test-v1/dodge-charger.zip",
+      "archiveFormat": "zip",
+      "archiveContents": "stream/*.yft, stream/*.ytd, data/*.meta, LICENSE.txt, README.txt",
+      "installationNote": "حزمة ZIP تجريبية للاستيراد اليدوي فقط؛ لا يُعد التنزيل تثبيتًا ولا يضمن دعم المستورد لهذه البنية.",
+      "imageType": "illustration",
+      "sourceURL": "https://github.com/Rymex47/free-modpack"
     },
     {
       "id": "lamborghini-huracan",
@@ -107,7 +119,13 @@
           "sha256": "c9fd6fe5bda80edeb8c37184d7f7bcdea277d468b66f97b9c8e093f01b153f7d",
           "extension": "ytd"
         }
-      ]
+      ],
+      "archiveURL": "https://github.com/Amaryt1/PROOOOO/releases/download/amaryt-vehicle-zip-test-v1/lamborghini-huracan.zip",
+      "archiveFormat": "zip",
+      "archiveContents": "stream/*.yft, stream/*.ytd, data/*.meta, LICENSE.txt, README.txt",
+      "installationNote": "حزمة ZIP تجريبية للاستيراد اليدوي فقط؛ لا يُعد التنزيل تثبيتًا ولا يضمن دعم المستورد لهذه البنية.",
+      "imageType": "illustration",
+      "sourceURL": "https://github.com/Rymex47/free-modpack"
     }
   ],
   "fileFormat": "files-v1"
