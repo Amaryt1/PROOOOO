@@ -1,0 +1,39 @@
+name: Test source download with ordinary browser cookie session
+on:
+  push:
+    paths: ['.github/workflows/test-source-archive-session.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check whether GTA5 Mods original Download link supplies a usable binary ZIP
+        run: |
+          python3 - <<'PY'
+          import http.cookiejar, urllib.request, re, urllib.parse
+          base='https://www.gta5-mods.com/vehicles/toyota-hilux-glx-2021-add-on-fivem'
+          cj=http.cookiejar.CookieJar()
+          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+          headers={'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36','Accept-Language':'en-US,en;q=0.9'}
+          try:
+            r=opener.open(urllib.request.Request(base,headers=headers),timeout=20)
+            page=r.read(700000).decode('utf-8','replace')
+            r.close()
+            matched=re.search(r'href="(/vehicles/toyota-hilux-glx-2021-add-on-fivem/download/\d+)"',page)
+            if not matched:raise RuntimeError('No authentic download button')
+            u=urllib.parse.urljoin(base,matched.group(1))
+            next_headers={**headers,'Referer':base,'Accept':'application/zip,application/octet-stream,*/*','Sec-Fetch-Site':'same-origin','Sec-Fetch-Mode':'navigate','Sec-Fetch-Dest':'document'}
+            with opener.open(urllib.request.Request(u,headers=next_headers),timeout=25) as response:
+              print('original',u)
+              print('status',response.status)
+              print('final_url',response.url)
+              print('content_type',response.headers.get('content-type'))
+              print('content_length',response.headers.get('content-length'))
+              print('first8_bytes',repr(response.read(8)))
+              print('cookies',len(list(cj)))
+          except Exception as e:
+            print('original-download session result:',type(e).__name__,str(e)[:500])
+          PY
