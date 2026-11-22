@@ -3,6 +3,7 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <objc/runtime.h>
+#import <objc/message.h>
 #import <os/log.h>
 
 static NSString *const configURL=@"https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/config.json";
@@ -55,6 +56,9 @@ static id member(id object,const char *name){
 @property(nonatomic) NSTimeInterval checked;
 @property(nonatomic,strong) NSString *connection;
 @property(nonatomic,strong) NSString *layoutSignature;
+@property(nonatomic,strong) NSString *pendingInstallId;
+@property(nonatomic,strong) NSArray *pendingInstallDirs;
+@property(nonatomic) NSInteger installChecks;
 @property(nonatomic,strong) UILabel *activeBadge;
 @property(nonatomic,strong) UIScrollView *tabScroll;
 @property(nonatomic,weak) UIView *tabParent;
@@ -118,12 +122,8 @@ static AMARYTKit *kit;
  if(!vc.viewIfLoaded.window || vc.viewIfLoaded.hidden || vc.isBeingDismissed)return;
  if(self.host!=vc){[self hide];self.layoutSignature=nil;[self.activeBadge removeFromSuperview];self.activeBadge=nil;}
  self.host=vc;self.visible=YES;
- if(self.activeBadge.superview!=vc.view){
-  UILabel *badge=[UILabel new];badge.text=@"  AMAR YT Kit Active · Build 8  ";badge.font=[UIFont systemFontOfSize:10 weight:UIFontWeightSemibold];badge.textColor=UIColor.whiteColor;badge.backgroundColor=[UIColor colorWithWhite:.08 alpha:.85];badge.userInteractionEnabled=NO;badge.layer.cornerRadius=5;badge.clipsToBounds=YES;
-  badge.translatesAutoresizingMaskIntoConstraints=NO;[vc.view addSubview:badge];self.activeBadge=badge;
-  [NSLayoutConstraint activateConstraints:@[[badge.bottomAnchor constraintEqualToAnchor:vc.view.safeAreaLayoutGuide.bottomAnchor constant:-3],[badge.centerXAnchor constraintEqualToAnchor:vc.view.safeAreaLayoutGuide.centerXAnchor]]];
-  trace([NSString stringWithFormat:@"badge attached host=%@ window=%@",NSStringFromClass(vc.class),NSStringFromClass(vc.view.window.class)]);
- }
+ // Preserve diagnostics in the log without exposing build details to players.
+ [self.activeBadge removeFromSuperview];self.activeBadge=nil;
  [self layout:vc];[self evaluate];
  trace(@"launcher visible");[self refreshIfNeeded];
 }
@@ -184,7 +184,7 @@ static AMARYTKit *kit;
 }
 -(void)render{
  if(!self.ready || !self.kind)return;
- NSDictionary *state=@{@"kind":self.kind,@"config":self.config,@"version":@(kitVersion),@"catalog":self.catalog?:@{@"categories":@[],@"mods":@[]},@"favorites":[prefs() arrayForKey:key(@"favorites")]?:@[],@"downloaded":[self downloaded],@"busy":@(self.transfer!=nil),@"connection":self.connection?:@"",@"build":@"8",@"status":self.status?:@"",@"last":@([prefs() doubleForKey:key(@"last")])};
+ NSDictionary *state=@{@"kind":self.kind,@"config":self.config,@"version":@(kitVersion),@"catalog":self.catalog?:@{@"categories":@[],@"mods":@[]},@"favorites":[prefs() arrayForKey:key(@"favorites")]?:@[],@"downloaded":[self downloaded],@"installed":[self installed],@"busy":@(self.transfer!=nil),@"connection":self.connection?:@"",@"build":@"9",@"status":self.status?:@"",@"last":@([prefs() doubleForKey:key(@"last")])};
  NSData *data=[NSJSONSerialization dataWithJSONObject:state options:0 error:nil];
  NSString *json=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
  WKWebView *web=self.panel;if(json)[web evaluateJavaScript:[NSString stringWithFormat:@"render(%@)",json] completionHandler:^(id result,NSError *error){if(error && self.panel==web)[self nativePanel];}];
@@ -379,6 +379,7 @@ static BOOL brandView(UIView *v){
  if([a isEqual:@"clearCatalog"]){[prefs() removeObjectForKey:key(@"catalog")];[self loadMods];self.status=@"تم مسح قائمة المودات المخزّنة.";[self render];return;}
  if([a isEqual:@"refreshConfig"]){[self fetch:NO];return;}
  if([a isEqual:@"refreshMods"]){[self fetch:YES];return;}
+ if([a isEqual:@"cancelDownload"]){if(self.download){[self.download cancel];self.download=nil;}if(self.transfer)[self finishTransfer:@"تم إلغاء التنزيل."];return;}
  for(NSDictionary *mod in self.catalog[@"mods"])if([mod[@"id"] isEqual:ident]){
   if([a isEqual:@"favorite"]){NSMutableArray *f=[[prefs() arrayForKey:key(@"favorites")] mutableCopy]?:[NSMutableArray new];if([f containsObject:ident])[f removeObject:ident];else [f addObject:ident];[prefs() setObject:f forKey:key(@"favorites")];[self render];}
   if([a isEqual:@"download"] && !self.download && !self.verifying && [mod[@"minKit"] integerValue]<=kitVersion && kitVersion<=[mod[@"maxKit"] integerValue]){
