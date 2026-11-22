@@ -7,7 +7,7 @@ mkdir -p "$app/Frameworks" "$app/AMARYTKit"
 arch=$(uname -m)
 cc=(xcrun --sdk iphonesimulator clang -target "$arch-apple-ios16.0-simulator" -fobjc-arc -fblocks)
 "${cc[@]}" -dynamiclib source/AMARYTKit.m -framework UIKit -framework WebKit -framework Foundation -framework JavaScriptCore -framework CoreGraphics -framework QuartzCore -install_name @rpath/AMARYTKit.dylib -o "$app/Frameworks/AMARYTKit.dylib"
-"${cc[@]}" scripts/simulator/Host.m -framework Foundation -framework UIKit -Wl,-rpath,@executable_path/Frameworks -Wl,-needed_library,"$app/Frameworks/AMARYTKit.dylib" -o "$app/Host"
+"${cc[@]}" scripts/simulator/Host.m -framework CoreGraphics -framework Foundation -framework UIKit -Wl,-rpath,@executable_path/Frameworks -Wl,-needed_library,"$app/Frameworks/AMARYTKit.dylib" -o "$app/Host"
 cp config.json mods.json source/policy.js source/panel.html "$app/AMARYTKit/"
 python3 - "$app" <<'PY'
 import json,sys,plistlib
