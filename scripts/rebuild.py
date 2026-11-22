@@ -62,6 +62,11 @@ def link_kit(original):
 def rebuild(src, out, tmp):
     kit = tmp/'AMARYTKit.dylib'
     subprocess.run([ROOT/'scripts/compile.sh', kit],check=True)
+    # Only the two changed code objects are provisionally signed. Device signing seals the outer app.
+    def sign(path):
+        cmd=[os.environ.get('ZSIGN','zsign'),'-a','-f',str(path)] if not shutil.which('codesign') else ['codesign','--force','--sign','-',str(path)]
+        subprocess.run(cmd,check=True,stdout=subprocess.DEVNULL)
+    sign(kit)
     trust=json.loads((ROOT/'scripts/v4-hashes.json').read_text())
     with zipfile.ZipFile(src) as old:
         names=old.namelist()
@@ -75,8 +80,29 @@ def rebuild(src, out, tmp):
         lang=json.loads(old.read(TRANSLATION))
         lang['launcher'].update({'GAMES':'الألعاب','MODS':'المودات','SAVES':'الحفظ','SETTINGS':'الإعدادات'})
         pl=plistlib.loads(old.read(APP+'Info.plist'))
-        pl.update(CFBundleDisplayName='AMAR YT V5',CFBundleShortVersionString='5.0',CFBundleVersion='5')
+        pl.update(CFBundleDisplayName='AMAR YT V5',CFBundleShortVersionString='5.0',CFBundleVersion='6')
         changes={ARABIC:link_kit(original),TRANSLATION:json.dumps(lang,ensure_ascii=False,indent=2).encode(),APP+'Info.plist':plistlib.dumps(pl)}
+        localized=tmp/'GTAVArabic.dylib'
+        localized.write_bytes(changes[ARABIC])
+        sign(localized)
+        changes[ARABIC]=localized.read_bytes()
+        additions={APP+'Frameworks/AMARYTKit.dylib':kit.read_bytes()}
+        for path in ['config.json','mods.json','source/panel.html','source/policy.js']:
+            content=(ROOT/path).read_bytes()
+            if path=='config.json':
+                fallback=json.loads(content)
+                fallback['welcome'].update(id='welcome-final-local',enabled=False)
+                content=json.dumps(fallback,ensure_ascii=False).encode()
+            additions[APP+'AMARYTKit/'+Path(path).name]=content
+        resources=APP+'_CodeSignature/CodeResources'
+        seal=plistlib.loads(old.read(resources))
+        for name,content in {**changes,**additions}.items():
+            rel=name[len(APP):]
+            if rel=='Info.plist': continue
+            sha1=hashlib.sha1(content).digest()
+            seal['files'][rel]=sha1
+            seal['files2'][rel]={'hash':sha1,'hash2':hashlib.sha256(content).digest()}
+        changes[resources]=plistlib.dumps(seal)
         staged=tmp/'package.ipa'
         with zipfile.ZipFile(staged,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=3) as new:
             for item in old.infolist():
@@ -85,9 +111,8 @@ def rebuild(src, out, tmp):
                 else:
                     with old.open(item) as r,new.open(copy(item),'w') as w:
                         shutil.copyfileobj(r,w,2**20)
-            new.write(kit,APP+'Frameworks/AMARYTKit.dylib')
-            for path in ['config.json','mods.json','source/panel.html','source/policy.js']:
-                new.write(ROOT/path, APP+'AMARYTKit/'+Path(path).name)
+            for name,content in additions.items():
+                new.writestr(name,content)
         with zipfile.ZipFile(staged) as new:
             if new.testzip(): raise ValueError('CRC verification failed')
             changed=[]

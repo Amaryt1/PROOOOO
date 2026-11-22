@@ -21,15 +21,29 @@ function validConfig(c) {
     && Array.isArray(u.features) && u.features.length<=25 && u.features.every(x=>text(x,240))
     && Array.isArray(c.news) && c.news.length<=40 && c.news.every(x=>text(x,500)));
 }
+function modFiles(m) {
+  if ('files' in m) return m.files;
+  return [{name:m.id+'.'+m.extension,url:m.url,size:m.size,sha256:m.sha256,extension:m.extension}];
+}
+function validFiles(files) {
+  if (!Array.isArray(files) || !files.length || files.length>64) return false;
+  const names=new Set(); let total=0;
+  return files.every(f=>{
+    if(!obj(f) || !text(f.name,128) || !/^[A-Za-z0-9_-][A-Za-z0-9_. -]*$/.test(f.name) || f.name.includes('..')) return false;
+    const name=f.name.toLowerCase();
+    if(names.has(name) || !['yft','ytd','ydr'].includes(f.extension) || !name.endsWith('.'+f.extension)) return false;
+    names.add(name);total+=f.size;
+    return int(f.size) && f.size<=268435456 && total<=1073741824 && url(f.url) && typeof f.sha256==='string' && /^[a-f0-9]{64}$/.test(f.sha256);
+  });
+}
 function validMods(c) {
   if(!obj(c) || c.schema!==1 || !Array.isArray(c.categories) || c.categories.length>50 || !c.categories.every(x=>text(x,80)) || !Array.isArray(c.mods) || c.mods.length>2000) return false;
   const ids=new Set();
   return c.mods.every(m=>{
-    if(!obj(m) || !id(m.id) || ids.has(m.id)) return false;
-    ids.add(m.id);
+    if(!obj(m) || !id(m.id) || ids.has(m.id.toLowerCase())) return false;
+    ids.add(m.id.toLowerCase());
     return text(m.name,150) && m.name.length && text(m.description) && c.categories.includes(m.category) && image(m.image)
-      && int(m.size) && m.size<=268435456 && typeof m.sha256==='string' && /^[a-f0-9]{64}$/.test(m.sha256)
-      && url(m.url) && ['yft','ytd','ydr'].includes(m.extension) && int(m.minKit) && int(m.maxKit)
+      && validFiles(modFiles(m)) && int(m.minKit) && int(m.maxKit)
       && m.maxKit>=m.minKit && text(m.compatibility,250);
   });
 }
@@ -38,4 +52,10 @@ function mode(c,version,now) {
   if(!u.enabled) return '';
   if(version<u.minimum && now<end && end-now<=7*86400000) return 'force';
   return version<u.latest ? 'optional' : '';
+}
+
+// Serialize across the JSCore boundary so booleans and arrays use JSON semantics.
+function acceptsJSON(raw, mods) {
+  try { const value=JSON.parse(raw); return !!(mods ? validMods(value) : validConfig(value)); }
+  catch (_) { return false; }
 }

@@ -15,3 +15,8 @@ const catalog=(...items)=>({...mods,mods:items});
 assert(ctx.validMods(catalog(m)));assert(!ctx.validMods(catalog(m,m)));
 for(const fields of [{id:'../car'},{size:0},{size:268435457},{sha256:'n/a'},{url:'http://example.com/x'},{extension:'dylib'},{extension:'zip'},{minKit:6,maxKit:5}])assert(!ctx.validMods(catalog({...m,...fields})));
 assert.throws(()=>JSON.parse('{"broken":'));console.log('Configuration, fallback inputs, update thresholds, expiry and mod policy passed.');
+const files=['car.yft','car_hi.yft','car.ytd'].map(name=>({name,url:m.url,size:64,sha256:m.sha256,extension:name.split('.').pop()}));
+assert(ctx.validMods(catalog({...m,files})));assert(ctx.acceptsJSON(JSON.stringify(c),false));assert(!ctx.acceptsJSON('null',false));
+for(const name of ['../car.yft','a/b.yft','car.dylib','.car.yft','car.yft\u0000'])assert(!ctx.validMods(catalog({...m,files:[{...files[0],name}]})));
+assert(!ctx.validMods(catalog({...m,files:[]})));assert(!ctx.validMods(catalog({...m,files:[files[0],{...files[0],name:'CAR.YFT'}]})));
+console.log('Multi-file manifests, legacy entries, duplicates, unsafe names and JSON bridge passed.');
