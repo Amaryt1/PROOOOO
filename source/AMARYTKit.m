@@ -387,12 +387,79 @@ static BOOL brandView(UIView *v){
   }break;
  }
 }
+
+static NSURL *nativeModsRoot(void){
+ NSURL *docs=[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject;
+ return [[docs URLByAppendingPathComponent:@"GTAV" isDirectory:YES] URLByAppendingPathComponent:@"mods" isDirectory:YES];
+}
+static BOOL installedFolders(NSArray *names){
+ if(![names isKindOfClass:NSArray.class] || !names.count || names.count>20)return NO;
+ NSFileManager *fm=NSFileManager.defaultManager;
+ for(id name in names){
+  if(![name isKindOfClass:NSString.class] || ![(NSString*)name length] || [(NSString*)name containsString:@"/"] || [(NSString*)name containsString:@".."])return NO;
+  NSURL *folder=[nativeModsRoot() URLByAppendingPathComponent:name isDirectory:YES];
+  BOOL isDir=NO;
+  if(![fm fileExistsAtPath:folder.path isDirectory:&isDir] || !isDir)return NO;
+  if(![fm contentsOfDirectoryAtPath:folder.path error:nil].count)return NO;
+ }return YES;
+}
 static NSURL *modRoot(void){
  NSURL *docs=[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject;
  return [docs URLByAppendingPathComponent:@"AMARYT-Mods" isDirectory:YES];
 }
 static BOOL regularFolder(NSURL *url){
  return [[[NSFileManager.defaultManager attributesOfItemAtPath:url.path error:nil] fileType] isEqual:NSFileTypeDirectory];
+}
+-(NSArray*)installed{
+ NSMutableArray *found=[NSMutableArray new];
+ for(NSDictionary *m in self.catalog[@"mods"]?:@[]){
+  if(installedFolders(m[@"expectedMods"]))[found addObject:m[@"id"]];
+ }return found;
+}
+-(void)pollNativeImport{
+ NSString *identifier=self.pendingInstallId;
+ if(!identifier.length)return;
+ if(installedFolders(self.pendingInstallDirs)){
+  self.pendingInstallId=nil;self.pendingInstallDirs=nil;
+  self.status=@"تم التثبيت بنجاح.";
+  trace([NSString stringWithFormat:@"native importer confirmed %@",identifier]);
+  [self render];return;
+ }
+ if(++self.installChecks>=40){
+  self.pendingInstallId=nil;self.pendingInstallDirs=nil;
+  self.status=@"تعذّر تأكيد التثبيت. راجع قائمة المودات الأصلية.";
+  trace([NSString stringWithFormat:@"native importer not confirmed %@",identifier]);
+  [self render];return;
+ }
+ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,3*NSEC_PER_SEC),dispatch_get_main_queue(),^{if([self.pendingInstallId isEqual:identifier])[self pollNativeImport];});
+}
+-(void)importArchive:(NSURL*)url forMod:(NSDictionary*)mod{
+ if(![url isFileURL] || ![NSFileManager.defaultManager fileExistsAtPath:url.path]){
+  self.status=@"ملف التثبيت غير متوفر.";[self render];return;
+ }
+ UIViewController *vc=self.host;SEL selector=NSSelectorFromString(@"importModsFrom:");
+ if(!vc.viewIfLoaded.window || ![vc respondsToSelector:selector]){
+  self.status=@"تم تحميل ZIP. استخدم زر استيراد مود في المشغّل.";
+  [self render];return;
+ }
+ trace([NSString stringWithFormat:@"invoke original importer %@",mod[@"id"]]);
+ self.pendingInstallId=mod[@"id"];self.pendingInstallDirs=mod[@"expectedMods"];self.installChecks=0;
+ self.status=@"جارٍ استيراد المود إلى اللعبة…";[self render];
+ @try{
+  ((void(*)(id,SEL,id))objc_msgSend)(vc,selector,@[url]);
+ }@catch(NSException *exception){
+  trace([NSString stringWithFormat:@"native import exception %@",exception.name]);
+  self.pendingInstallId=nil;self.pendingInstallDirs=nil;
+  self.status=@"تعذّر الاستيراد تلقائيًا. استخدم الاستيراد اليدوي.";
+  [self render];return;
+ }
+ if(self.pendingInstallDirs.count){
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW,3*NSEC_PER_SEC),dispatch_get_main_queue(),^{if(self.pendingInstallId)[self pollNativeImport];});
+ }else{
+  self.pendingInstallId=nil;self.pendingInstallDirs=nil;
+  self.status=@"تم إرسال ZIP إلى مستورد اللعبة. تحقق من نتيجة الاستيراد.";
+  [self render];
+ }
 }
 -(NSArray*)downloaded{
  NSURL *root=modRoot();NSMutableArray *result=[NSMutableArray new];if(!regularFolder(root))return result;
