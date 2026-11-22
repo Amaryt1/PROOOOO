@@ -63,6 +63,7 @@ static id member(id object,const char *name){
 @property(nonatomic,strong) UIScrollView *tabScroll;
 @property(nonatomic,weak) UIView *tabParent;
 @property(nonatomic,strong) NSDictionary *shownConfig;
+-(NSArray*)installed;
 @end
 static AMARYTKit *kit;
 @implementation AMARYTKit
@@ -556,7 +557,7 @@ static BOOL saveMod(NSURL *tmp,NSDictionary *mod,NSURL *stage){
  NSInputStream *stream=[NSInputStream inputStreamWithURL:tmp];[stream open];
  unsigned char buf[65536],digest[CC_SHA256_DIGEST_LENGTH];CC_SHA256_CTX ctx;CC_SHA256_Init(&ctx);
  NSInteger n;BOOL header=NO;NSUInteger total=0;
- while((n=[stream read:buf maxLength:sizeof buf])>0){if(!total)header=n>=4 && ([mod[@"extension"] isEqual:@"zip"]?(!memcmp(buf,"PK\\003\\004",4)):(!memcmp(buf,"RSC7",4)));CC_SHA256_Update(&ctx,buf,(CC_LONG)n);total+=n;}
+ while((n=[stream read:buf maxLength:sizeof buf])>0){if(!total)header=n>=4 && ([mod[@"extension"] isEqual:@"zip"]?(buf[0]==0x50 && buf[1]==0x4b && buf[2]==0x03 && buf[3]==0x04):(!memcmp(buf,"RSC7",4)));CC_SHA256_Update(&ctx,buf,(CC_LONG)n);total+=n;}
  [stream close];if(!header || n<0 || total!=size)return NO;
  CC_SHA256_Final(digest,&ctx);NSMutableString *sha=[NSMutableString new];for(unsigned i=0;i<sizeof digest;i++)[sha appendFormat:@"%02x",digest[i]];
  if(![sha isEqual:mod[@"sha256"]])return NO;
