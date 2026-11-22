@@ -1,0 +1,33 @@
+name: Validate published mod catalog
+on:
+  push:
+    paths:
+      - 'mods.json'
+      - 'source/policy.js'
+      - 'scripts/test.js'
+      - '.github/workflows/validate-live-catalog.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: node scripts/test.js
+      - name: Check every archive URL matches a released ZIP
+        run: |
+          python3 - <<'PY'
+          import json,urllib.request
+          mods=json.load(open('mods.json'))['mods']
+          for m in mods:
+            if 'archiveURL' not in m:continue
+            url=m['archiveURL']
+            assert url.startswith('https://github.com/Amaryt1/PROOOOO/releases/download/')
+            req=urllib.request.Request(url,method='HEAD',headers={'User-Agent':'AMARYT-mod-catalog-check'})
+            with urllib.request.urlopen(req,timeout=20) as r:
+              assert r.status==200
+              assert r.getheader('Content-Type','').lower().find('text/html')<0, url
+            print('Archive URL reachable:',m['id'])
+          PY
