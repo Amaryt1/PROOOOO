@@ -11,6 +11,28 @@
   ],
   "mods": [
     {
+      "id": "iraqi-garage-3",
+      "name": "Iraqi Garage — سايبة + بيجو 405 + تشارجر",
+      "description": "حزمة السيارات الثلاث التي نجح استيرادها داخل GTA V.",
+      "category": "السيارات",
+      "image": "https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/images/mods/iraqi-garage.svg",
+      "minKit": 5,
+      "maxKit": 5,
+      "compatibility": "حزمة ZIP تستورد بالمستورد الأصلي للعبة.",
+      "archiveURL": "https://github.com/Amaryt1/PROOOOO/releases/download/iraqi-garage-3cars-v1/Iraqi_Garage_3_Cars_Realistic_Driving_Audio_Fixed_FiveStarPort.zip",
+      "archiveSize": 73604201,
+      "archiveSha256": "792d9a4e714ed16cb753982eec74e25c0e3a5882f7033b3109af54f8686f286e",
+      "expectedMods": [
+        "405glxfnt",
+        "sj131",
+        "srtday20"
+      ],
+      "version": "1.0",
+      "featured": true,
+      "installMode": "native",
+      "archiveFormat": "zip"
+    },
+    {
       "id": "nissan-gtr",
       "name": "Nissan GT-R R35",
       "description": "سيارة رياضية مميزة.",
