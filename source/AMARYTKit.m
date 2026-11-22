@@ -97,19 +97,10 @@ static AMARYTKit *kit;
  }
  trace(self.config?@"config loaded and validated":@"config validation failed");
 }
--(NSDictionary*)catalogWithPilot:(NSDictionary*)catalog{
- if(![NSFileManager.defaultManager fileExistsAtPath:asset(@"pilot-cars.zip").path])return catalog;
- NSDictionary *local=decode([NSData dataWithContentsOfURL:asset(@"mods.json")]);
- if(![self valid:local mods:YES] || ![catalog[@"mods"] isKindOfClass:NSArray.class])return catalog;
- NSDictionary *pilot=[local[@"mods"] firstObject];if(![pilot[@"bundleArchive"] isEqual:@"pilot-cars.zip"])return catalog;
- for(NSDictionary *m in catalog[@"mods"])if([m[@"id"] isEqual:pilot[@"id"]])return catalog;
- NSMutableDictionary *merged=[catalog mutableCopy];NSMutableArray *models=[NSMutableArray arrayWithObject:pilot];[models addObjectsFromArray:catalog[@"mods"]];
- merged[@"mods"]=models;return merged;
-}
 -(void)loadMods{
  self.modsSource=self.config[@"modsURL"];NSDictionary *c=[prefs() dictionaryForKey:key(@"catalog")];
  NSDictionary *base=[c[@"url"] isEqual:self.modsSource] && [self valid:c[@"value"] mods:YES]?c[@"value"]:decode([NSData dataWithContentsOfURL:asset(@"mods.json")]);
- self.catalog=[self catalogWithPilot:base];
+ self.catalog=base;
 }
 -(void)fetch:(BOOL)mods{
  NSString *url=mods?self.config[@"modsURL"]:configURL;
@@ -534,8 +525,6 @@ static BOOL regularFolder(NSURL *url){
  NSDictionary *archive=nil;
  if([mod[@"archiveURL"] isKindOfClass:NSString.class] && [mod[@"archiveSize"] unsignedLongLongValue]>0){
   archive=@{@"name":[mod[@"id"] stringByAppendingString:@".zip"],@"url":mod[@"archiveURL"],@"size":mod[@"archiveSize"],@"sha256":mod[@"archiveSha256"],@"extension":@"zip"};
- }else if([mod[@"bundleArchive"] isEqual:@"pilot-cars.zip"]){
-  archive=@{@"name":@"pilot-cars.zip",@"url":@"bundle://pilot-cars.zip",@"size":mod[@"archiveSize"],@"sha256":mod[@"archiveSha256"],@"extension":@"zip"};
  }
  self.files=archive?@[archive]:(mod[@"files"]?:@[@{@"name":[NSString stringWithFormat:@"%@.%@",mod[@"id"],mod[@"extension"]],@"url":mod[@"url"],@"size":mod[@"size"],@"sha256":mod[@"sha256"],@"extension":mod[@"extension"]}]);
  NSURL *prior=[modRoot() URLByAppendingPathComponent:mod[@"id"]];
@@ -550,24 +539,6 @@ static BOOL regularFolder(NSURL *url){
  self.stage=[[NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES] URLByAppendingPathComponent:NSUUID.UUID.UUIDString isDirectory:YES];
  if(![NSFileManager.defaultManager createDirectoryAtURL:self.stage withIntermediateDirectories:NO attributes:nil error:nil]){[self finishTransfer:@"تعذّر إنشاء مجلد التنزيل المؤقت."];return;}
  self.transfer=mod;self.fileIndex=0;
- if([mod[@"bundleArchive"] isEqual:@"pilot-cars.zip"]){
-  self.verifying=YES;self.status=@"جارٍ تجهيز حزمة السيارات…";[self render];
-  NSURL *source=asset(@"pilot-cars.zip"),*dst=[self.stage URLByAppendingPathComponent:self.files.firstObject[@"name"]];
-  NSDictionary *archiveFile=self.files.firstObject;
-  dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY,0),^{
-   BOOL ok=[NSFileManager.defaultManager copyItemAtURL:source toURL:dst error:nil];
-   if(ok){
-    unsigned long long total=[[[NSFileManager.defaultManager attributesOfItemAtPath:dst.path error:nil] objectForKey:NSFileSize] unsignedLongLongValue];
-    if(total!=[archiveFile[@"size"] unsignedLongLongValue])ok=NO;
-    NSInputStream *stream=[NSInputStream inputStreamWithURL:dst];[stream open];
-    CC_SHA256_CTX ctx;CC_SHA256_Init(&ctx);uint8_t bytes[65536],digest[CC_SHA256_DIGEST_LENGTH];NSInteger n=0;
-    while(ok && (n=[stream read:bytes maxLength:sizeof(bytes)])>0)CC_SHA256_Update(&ctx,bytes,(CC_LONG)n);
-    if(ok && n<0)ok=NO;[stream close];
-    if(ok){CC_SHA256_Final(digest,&ctx);NSMutableString *h=[NSMutableString new];for(int k=0;k<CC_SHA256_DIGEST_LENGTH;k++)[h appendFormat:@"%02x",digest[k]];ok=[h isEqualToString:archiveFile[@"sha256"]];}
-   }
-   dispatch_async(dispatch_get_main_queue(),^{self.verifying=NO;if(ok){self.fileIndex=self.files.count;[self nextFile];}else [self finishTransfer:@"تعذّر التحقق من الحزمة المدمجة."];});
-  });return;
- }
  [self nextFile];
 }
 -(void)URLSession:(NSURLSession*)s task:(NSURLSessionTask*)task willPerformHTTPRedirection:(NSHTTPURLResponse*)response newRequest:(NSURLRequest*)req completionHandler:(void (^)(NSURLRequest*))done{
@@ -619,7 +590,7 @@ static BOOL saveMod(NSURL *tmp,NSDictionary *mod,NSURL *stage){
   if(ok){
    NSString *etag=@"";for(NSString *k in response.allHeaderFields)if([k caseInsensitiveCompare:@"etag"]==NSOrderedSame)etag=response.allHeaderFields[k];
    [prefs() setObject:@{@"url":request[@"url"],@"value":value,@"etag":etag} forKey:slot];
-   if(mods)self.catalog=[self catalogWithPilot:value];else{self.config=value;if(self.modsSource && ![self.modsSource isEqual:value[@"modsURL"]]){[self loadMods];if([self.kind isEqual:@"catalog"])[self fetch:YES];}}
+   if(mods)self.catalog=value;else{self.config=value;if(self.modsSource && ![self.modsSource isEqual:value[@"modsURL"]]){[self loadMods];if([self.kind isEqual:@"catalog"])[self fetch:YES];}}
   }
  }
  trace([NSString stringWithFormat:@"%@ HTTP %ld %@",mods?@"catalog":@"config",(long)code,ok?@"accepted":@"rejected"]);
