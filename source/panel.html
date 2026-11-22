@@ -86,9 +86,9 @@ function modCard(host,m){
  if(m.featured)$('span',p,'floating','مميز');
  const d=$('div',a,'details');$('h3',d,'',m.name);$('div',d,'size',sizeLabel(m));
  const stateName=preferred(m);
- if(stateName)$('span',d,'state',stateName==='installed'?'✓ تم التثبيت':'✓ تم التحميل');
+ if(has(m.id,state.updates))$('span',d,'state','تحديث متوفر');else if(stateName)$('span',d,'state',stateName==='installed'?'✓ تم التثبيت':'✓ تم التحميل');
  const acts=$('div',d,'actions');
- const label=stateName==='installed'?'إعادة التثبيت':stateName==='downloaded'?'استيراد مجددًا':'تثبيت';
+ const label=has(m.id,state.updates)?'تحديث المود':stateName==='installed'?'إعادة التثبيت':stateName==='downloaded'?'استيراد مجددًا':'تثبيت';
  const action=click(label,acts,'primary',()=>post('download',m.id));
  action.disabled=Boolean(state.busy)||Number(state.version)<Number(m.minKit)||Number(state.version)>Number(m.maxKit);
  const liked=has(m.id,state.favorites);
@@ -100,6 +100,7 @@ function filtered(){
  if(section==='downloaded')all=all.filter(m=>has(m.id,state.downloaded));
  if(section==='installed')all=all.filter(m=>has(m.id,state.installed));
  if(section==='favorites')all=all.filter(m=>has(m.id,state.favorites));
+ if(section==='updates')all=all.filter(m=>has(m.id,state.updates));
  if(category)all=all.filter(m=>m.category===category);
  if(search.trim())all=all.filter(m=>String(m.name+' '+m.category).toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
  if(sort==='name')all.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
@@ -117,7 +118,7 @@ function mainContent(target){
   for(const [k,t] of [['telegram','تيليجرام'],['instagram','إنستغرام'],['tiktok','تيك توك']])click(t,social,'smallbtn',()=>post('social',k));
   return;
  }
- if(section==='updates'){sectionHeading(target,'تحديثات المودات');empty(target,'لا توجد تحديثات مؤكدة حاليًا','سيظهر أي إصدار جديد بعد نشره والتحقق منه.');return}
+
  if(section==='home'){
   const hero=$('div',target,'hero'),t=$('div',hero);
   $('h1',t,'','مودات GTA V في مكان واحد');$('p',t,'','سيارات وشخصيات وإضافات متنوعة، بحفظ وتنزيل آمن.');
@@ -128,7 +129,7 @@ function mainContent(target){
  const select=$('select',toolbar);for(const [v,t] of [['featured','المميزة أولًا'],['name','حسب الاسم'],['size','حسب الحجم']]){$('option',select,'',t).value=v}select.value=sort;select.onchange=()=>{sort=select.value;fillGrid()};
  const chips=$('div',target,'chips');
  for(const k of ['',...(state.catalog.categories||[])])click(k||'الكل',chips,k===category?'chip active':'chip',()=>{category=k;draw()});
- sectionHeading(target,({home:'أحدث الإضافات',all:'كل المودات',downloaded:'التحميلات المكتملة',installed:'المودات المثبتة',favorites:'المفضلة'})[section]||'المودات');
+ sectionHeading(target,({home:'أحدث الإضافات',all:'كل المودات',downloaded:'التحميلات المكتملة',installed:'المودات المثبتة',favorites:'المفضلة',updates:'تحديثات المودات'})[section]||'المودات');
  const grid=$('div',target,'cards');grid.id='modsGrid';
  function fillGrid(){
   grid.textContent='';const matches=filtered();
