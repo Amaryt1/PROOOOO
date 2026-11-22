@@ -15,7 +15,7 @@ function entries(parent){
  if(!filtered.length)add('p',state.catalog.mods.length?'ما في مودات تطابق بحثك.':'لا توجد مودات منشورة حاليًا.',parent);
  for(const m of filtered){
   const files=m.files||[{name:m.id+'.'+m.extension,size:m.size}];const a=add('article','',parent);photo(m.image,a);add('h3',m.name,a);add('p',m.description,a);add('small',m.category+' · '+(files.reduce((sum,f)=>sum+f.size,0)/1048576).toFixed(2)+' MB · '+m.compatibility,a);add('br','',a);
-  add('small',files.map(f=>f.name).join(' · '),a);add('br','',a);const b=button('تنزيل الملفات',()=>post('download',m.id),a,true);b.disabled=state.busy || state.version<m.minKit || state.version>m.maxKit;
+  add('small',files.map(f=>f.name).join(' · '),a);add('br','',a);const downloaded=Array.isArray(state.downloaded)&&state.downloaded.includes(m.id);if(downloaded){const status=add('small','✓ تم التحميل والتحقق من الملفات — لم يُؤكد التثبيت داخل اللعبة',a);status.setAttribute('role','status');add('br','',a)}const b=button(downloaded?'إعادة تنزيل الملفات':'تنزيل الملفات',()=>post('download',m.id),a,true);b.disabled=state.busy || state.version<m.minKit || state.version>m.maxKit;
   button(state.favorites.includes(m.id)?'إزالة من المفضلة':'حفظ في المفضلة',()=>post('favorite',m.id),a)
  }
 }
