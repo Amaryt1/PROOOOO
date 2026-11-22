@@ -20,3 +20,31 @@ assert(ctx.validMods(catalog({...m,files})));assert(ctx.acceptsJSON(JSON.stringi
 for(const name of ['../car.yft','a/b.yft','car.dylib','.car.yft','car.yft\u0000'])assert(!ctx.validMods(catalog({...m,files:[{...files[0],name}]})));
 assert(!ctx.validMods(catalog({...m,files:[]})));assert(!ctx.validMods(catalog({...m,files:[files[0],{...files[0],name:'CAR.YFT'}]})));
 console.log('Multi-file manifests, legacy entries, duplicates, unsafe names and JSON bridge passed.');
+
+
+const build9=JSON.parse(fs.readFileSync('source/local-mods.json','utf8'));
+assert(ctx.validMods(build9),'Known-good packaged garage manifest must validate');
+const bundled=build9.mods[0];assert.equal(bundled.bundleArchive,'pilot-cars.zip');
+assert.equal(bundled.archiveSha256.length,64);
+const archiveTest={...m,archiveURL:'https://example.com/car.zip',archiveSize:123456,archiveSha256:'c'.repeat(64),expectedMods:['safe-car']};
+assert(ctx.validMods(catalog(archiveTest)));
+for(const bad of [
+ {...archiveTest,archiveURL:'http://example.com/car.zip'},
+ {...archiveTest,archiveURL:'https://example.com/car.dylib'},
+ {...archiveTest,archiveSize:0},
+ {...archiveTest,archiveSize:536870913},
+ {...archiveTest,archiveSha256:'bad'},
+ {...archiveTest,expectedMods:['../GTAV']},
+ {...archiveTest,expectedMods:['a/b']}
+ ])assert(!ctx.validMods(catalog(bad)),'Reject unsafe ZIP metadata');
+assert(!ctx.validMods(catalog({...bundled,bundleArchive:'other.zip'})));
+const panel=fs.readFileSync('source/panel.html','utf8');
+assert(panel.includes("post('download',m.id)"));
+assert(panel.includes("post('cancelDownload')"));
+assert(!panel.includes('متصل بـ GitHub'));
+assert(!panel.includes('AMAR YT Kit Active'));
+const native=fs.readFileSync('source/AMARYTKit.m','utf8');
+assert(native.includes('NSSelectorFromString(@"importModsFrom:")'));
+assert(native.includes('installedFolders(self.pendingInstallDirs)'));
+assert(!native.includes('AMAR YT Kit Active · Build 8'));
+console.log('Build9 ZIP validation, bundle resources, native-import bridge and clean UI checks passed.');
