@@ -1,0 +1,59 @@
+name: Publish Hilux GLX 2021 TELE beta to remote mod store
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-hilux-tele-beta.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: publish-hilux21-tele-beta
+  cancel-in-progress: false
+jobs:
+  verify-upload-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Reassemble original modified ZIP from GitHub blobs and verify bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 scripts/hilux_tele_release.py --assemble "$RUNNER_TEMP/AMARYT-HILUX-2021-TELE-BETA.zip"
+          python3 scripts/inspect_dlc_zip.py "$RUNNER_TEMP/AMARYT-HILUX-2021-TELE-BETA.zip" --json
+      - name: Publish real ZIP asset in GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="amaryt-hilux21-tele-v1"
+          asset="$RUNNER_TEMP/AMARYT-HILUX-2021-TELE-BETA.zip"
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --draft \
+              --title "AMAR YT - Toyota Hilux GLX 2021 - TELE BETA" \
+              --notes "Original mod by omardr; uploaded with user-confirmed author permission. Experimental TELE • @AMARYT decal on shared glass texture. RPF7/ZIP verified; not yet iOS gameplay tested."
+          fi
+          gh release upload "$tag" "$asset" --clobber
+          gh release edit "$tag" --draft=false
+          gh release view "$tag" --json assets --jq '.assets[] | {name,size}'
+      - name: Only after release exists, add beta car to remote-only mod catalog
+        run: |
+          set -euo pipefail
+          python3 scripts/hilux_tele_release.py --publish-catalog mods.json
+          node scripts/test.js
+      - name: Commit live catalog
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mods.json
+          if git diff --staged --quiet; then
+            echo "Hilux beta already present in mods.json"
+          else
+            git commit -m "Publish verified Hilux21 TELE beta ZIP in remote-only mod store"
+            git push origin HEAD:main
+          fi
