@@ -48,3 +48,12 @@ assert(native.includes('NSSelectorFromString(@"importModsFrom:")'));
 assert(native.includes('installedFolders(self.pendingInstallDirs)'));
 assert(!native.includes('AMAR YT Kit Active · Build 8'));
 console.log('Build9 ZIP validation, bundle resources, native-import bridge and clean UI checks passed.');
+
+const markupScript=panel.match(/<script>([\s\S]*?)<\/script>/);
+assert(markupScript,'Store JavaScript must be embedded');
+const browserGlobals={console};
+Object.defineProperty(browserGlobals,'top',{value:{},writable:false,configurable:false});
+const browserVM=vm.createContext(browserGlobals);
+vm.runInContext(markupScript[1],browserVM,{filename:'panel.html'});
+assert.equal(vm.runInContext('typeof render',browserVM),'function');
+console.log('Catalog JavaScript initializes even with reserved window.top (Build9 hotfix).');
