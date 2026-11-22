@@ -1,0 +1,73 @@
+name: Package verified vehicle mods as ZIP
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/package-vehicle-mods.yml'
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build three complete ZIP archives from pinned source
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,urllib.request,pathlib,zipfile
+          rev="b338e44abedb42cc3d14a0dee3147fac58495252"
+          upstream="https://raw.githubusercontent.com/Rymex47/free-modpack/"+rev+"/"
+          out=pathlib.Path("vehicle-zips");out.mkdir(exist_ok=True)
+          manifest=json.loads(pathlib.Path("mods.json").read_text())
+          def fetch(url, cap):
+            with urllib.request.urlopen(urllib.request.Request(url,headers={"User-Agent":"AMARYT-ZIP-Packager"}),timeout=90) as response:
+              body=response.read(cap+1)
+            if len(body)>cap: raise ValueError("File exceeds limit "+url)
+            return body
+          license_text=fetch(upstream+"LICENSE",200_000)
+          metadata=("vehicles.meta","handling.meta","carvariations.meta","carcols.meta","dlctext.meta")
+          for mod in manifest["mods"]:
+            if not mod["id"] in ("nissan-gtr","dodge-charger","lamborghini-huracan"):continue
+            folder={"nissan-gtr":"gtr","dodge-charger":"charger","lamborghini-huracan":"lambo"}[mod["id"]]
+            dest=out/(mod["id"]+".zip")
+            readme=(
+              "AMAR YT GTA V vehicle resource pack: "+mod["name"]+"\n"
+              "Source: https://github.com/Rymex47/free-modpack\n"
+              "Pinned revision: "+rev+"\n"
+              "License of upstream files: MPL-2.0 (see LICENSE.txt).\n"
+              "This ZIP groups model/texture resources and metadata for manual import testing.\n"
+              "It has NOT been validated as installable by the iOS GTA V importer.\n"
+              "No automatic spawn or installation is promised.\n"
+            )
+            with zipfile.ZipFile(dest,"w",zipfile.ZIP_DEFLATED,compresslevel=6,allowZip64=True) as z:
+              z.writestr("README.txt",readme)
+              z.writestr("LICENSE.txt",license_text)
+              for f in mod["files"]:
+                body=fetch(f["url"],268435456)
+                if len(body)!=f["size"] or hashlib.sha256(body).hexdigest()!=f["sha256"] or body[:4]!=b"RSC7":
+                  raise ValueError("Rejected asset: "+f["name"])
+                z.writestr("stream/"+f["name"],body)
+              for name in metadata:
+                u=upstream+"modpack/"+folder+"/"+name
+                body=fetch(u,500_000)
+                z.writestr("data/"+name,body)
+            with zipfile.ZipFile(dest) as z:
+              if z.testzip():raise ValueError("Broken ZIP "+str(dest))
+            print(str(dest),dest.stat().st_size,hashlib.sha256(dest.read_bytes()).hexdigest(),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vehicle-zips
+          path: vehicle-zips/*.zip
+          if-no-files-found: error
+      - name: Publish stable publicly downloadable ZIP files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          tag="amaryt-vehicle-zip-test-v1"
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --title "AMAR YT vehicle ZIP test packs" --notes "Three openly sourced test vehicle resources (YFT/YTD + META), with attribution and original MPL 2.0 license. Original iOS mod importer compatibility is NOT confirmed. Test before distribution."
+          fi
+          gh release upload "$tag" vehicle-zips/*.zip --clobber
