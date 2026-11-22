@@ -115,11 +115,11 @@ static AMARYTKit *kit;
  if(!self.started || NSProcessInfo.processInfo.systemUptime-self.checked>=30){self.started=YES;[self fetch:NO];}
 }
 -(void)appeared:(UIViewController*)vc{
- if(!vc.viewIfLoaded.window || vc.presentedViewController)return;
+ if(!vc.viewIfLoaded.window || vc.viewIfLoaded.hidden || vc.isBeingDismissed)return;
  if(self.host!=vc){[self hide];self.layoutSignature=nil;[self.activeBadge removeFromSuperview];self.activeBadge=nil;}
  self.host=vc;self.visible=YES;
  if(self.activeBadge.superview!=vc.view){
-  UILabel *badge=[UILabel new];badge.text=@"  AMAR YT Kit Active · Build 7  ";badge.font=[UIFont systemFontOfSize:10 weight:UIFontWeightSemibold];badge.textColor=UIColor.whiteColor;badge.backgroundColor=[UIColor colorWithWhite:.08 alpha:.85];badge.userInteractionEnabled=NO;badge.layer.cornerRadius=5;badge.clipsToBounds=YES;
+  UILabel *badge=[UILabel new];badge.text=@"  AMAR YT Kit Active · Build 8  ";badge.font=[UIFont systemFontOfSize:10 weight:UIFontWeightSemibold];badge.textColor=UIColor.whiteColor;badge.backgroundColor=[UIColor colorWithWhite:.08 alpha:.85];badge.userInteractionEnabled=NO;badge.layer.cornerRadius=5;badge.clipsToBounds=YES;
   badge.translatesAutoresizingMaskIntoConstraints=NO;[vc.view addSubview:badge];self.activeBadge=badge;
   [NSLayoutConstraint activateConstraints:@[[badge.bottomAnchor constraintEqualToAnchor:vc.view.safeAreaLayoutGuide.bottomAnchor constant:-3],[badge.centerXAnchor constraintEqualToAnchor:vc.view.safeAreaLayoutGuide.centerXAnchor]]];
   trace([NSString stringWithFormat:@"badge attached host=%@ window=%@",NSStringFromClass(vc.class),NSStringFromClass(vc.view.window.class)]);
@@ -184,7 +184,7 @@ static AMARYTKit *kit;
 }
 -(void)render{
  if(!self.ready || !self.kind)return;
- NSDictionary *state=@{@"kind":self.kind,@"config":self.config,@"version":@(kitVersion),@"catalog":self.catalog?:@{@"categories":@[],@"mods":@[]},@"favorites":[prefs() arrayForKey:key(@"favorites")]?:@[],@"downloaded":[self downloaded],@"busy":@(self.transfer!=nil),@"connection":self.connection?:@"",@"build":@"7",@"status":self.status?:@"",@"last":@([prefs() doubleForKey:key(@"last")])};
+ NSDictionary *state=@{@"kind":self.kind,@"config":self.config,@"version":@(kitVersion),@"catalog":self.catalog?:@{@"categories":@[],@"mods":@[]},@"favorites":[prefs() arrayForKey:key(@"favorites")]?:@[],@"downloaded":[self downloaded],@"busy":@(self.transfer!=nil),@"connection":self.connection?:@"",@"build":@"8",@"status":self.status?:@"",@"last":@([prefs() doubleForKey:key(@"last")])};
  NSData *data=[NSJSONSerialization dataWithJSONObject:state options:0 error:nil];
  NSString *json=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
  WKWebView *web=self.panel;if(json)[web evaluateJavaScript:[NSString stringWithFormat:@"render(%@)",json] completionHandler:^(id result,NSError *error){if(error && self.panel==web)[self nativePanel];}];
@@ -264,17 +264,29 @@ static BOOL brandView(UIView *v){
  NSArray *tabs=member(vc,"_tabs");UIView *side=member(vc,"_sidebar");
  if(![side isKindOfClass:UIView.class] || ![tabs isKindOfClass:NSArray.class])return;
  NSDictionary *names=@{@"GAMES":@"الألعاب",@"الألعاب":@"الألعاب",@"DATA":@"الحفظ",@"SAVES":@"الحفظ",@"الحفظ":@"الحفظ",@"البيانات وملفات الحفظ":@"الحفظ",@"ملفات الحفظ":@"الحفظ",@"SETTINGS":@"الإعدادات",@"الإعدادات":@"الإعدادات",@"MODS":@"المودات",@"المودات":@"المودات"};
- NSMutableArray *visible=[NSMutableArray new];CGFloat total=0;SEL action=NSSelectorFromString(@"tabTapped:");
+ NSMutableArray *visible=[NSMutableArray new];NSMutableArray<NSNumber*> *widths=[NSMutableArray new];CGFloat total=0;SEL action=NSSelectorFromString(@"tabTapped:");
  NSMutableArray *geometry=[NSMutableArray new];
  for(UIButton *button in tabs){
   if(![button isKindOfClass:UIButton.class] || ![[button actionsForTarget:vc forControlEvent:UIControlEventTouchUpInside] containsObject:NSStringFromSelector(action)])continue;
-  NSAttributedString *old=[button attributedTitleForState:0];NSString *name=names[button.accessibilityLabel.uppercaseString?:@""]?:names[old.string.uppercaseString?:@""];if(!name)continue;
-  NSMutableDictionary *attrs=old.length?[[old attributesAtIndex:0 effectiveRange:NULL] mutableCopy]:[NSMutableDictionary new];
-  [attrs removeObjectForKey:NSKernAttributeName];attrs[NSFontAttributeName]=[UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
-  NSAttributedString *title=[[NSAttributedString alloc]initWithString:name attributes:attrs];
-  if(!old || ![title isEqualToAttributedString:old])[button setAttributedTitle:title forState:0];
-  button.titleLabel.adjustsFontSizeToFitWidth=NO;button.contentEdgeInsets=UIEdgeInsetsZero;button.titleEdgeInsets=UIEdgeInsetsZero;button.accessibilityLabel=name;
-  if(!button.hidden){[visible addObject:button];total+=ceil(title.size.width)+12;[geometry addObject:[NSString stringWithFormat:@"%@ %.0f",name,button.frame.size.width]];}
+  NSAttributedString *old=[button attributedTitleForState:0];NSString *name=names[button.accessibilityLabel.uppercaseString?:@""]?:names[old.string.uppercaseString?:@""];if(!name && button.tag>=0 && button.tag<4){
+   // The original controller assigns these tags for GAMES, DATA, SETTINGS, MODS.
+   name=(@[@"الألعاب",@"الحفظ",@"الإعدادات",@"المودات"])[button.tag];
+  }
+  if(!name)continue;
+  static char captionKey;
+  UILabel *caption=objc_getAssociatedObject(button,&captionKey);
+  if(!caption){
+   caption=[UILabel new];caption.userInteractionEnabled=NO;caption.isAccessibilityElement=NO;
+   caption.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+   caption.textAlignment=NSTextAlignmentCenter;caption.font=[UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];caption.numberOfLines=1;
+   [button addSubview:caption];objc_setAssociatedObject(button,&captionKey,caption,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  }
+  caption.text=name;caption.textColor=old.length?[old attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL]:nil;
+  if(!caption.textColor)caption.textColor=button.currentTitleColor?:UIColor.whiteColor;
+  caption.frame=button.bounds;button.titleLabel.alpha=0;button.accessibilityLabel=name;
+  if(button.subviews.lastObject!=caption)[button bringSubviewToFront:caption];
+  CGFloat desired=ceil([caption sizeThatFits:CGSizeMake(CGFLOAT_MAX,48)].width)+20;
+  if(!button.hidden){[visible addObject:button];total+=desired;[widths addObject:@(desired)];[geometry addObject:[NSString stringWithFormat:@"%@ %.0f",name,button.frame.size.width]];}
  }
  if(visible.count){
   UIButton *first=visible.firstObject;UIView *parent=first.superview==self.tabScroll?self.tabParent:first.superview;UIView *avatar=member(vc,"_avatar");
@@ -290,9 +302,10 @@ static BOOL brandView(UIView *v){
     self.tabScroll.frame=CGRectMake(left,y,room,height);self.tabScroll.contentSize=CGSizeMake(full,height);
    }
    CGFloat x=compact?0:right-full;
+   NSUInteger index=0;
    for(UIButton *button in visible){
     UIView *container=compact?self.tabScroll:parent;if(button.superview!=container)[container addSubview:button];
-    CGRect f=CGRectMake(x,compact?0:y,ceil([button attributedTitleForState:0].size.width)+12,height);
+    CGRect f=CGRectMake(x,compact?0:y,widths[index++].doubleValue,height);
     if(!CGRectEqualToRect(button.frame,f))button.frame=f;x=CGRectGetMaxX(f)+gap;
    }
    if(!compact && self.tabScroll){for(UIView *v in self.tabScroll.subviews.copy)if([tabs containsObject:v])[parent addSubview:v];[self.tabScroll removeFromSuperview];self.tabScroll=nil;self.tabParent=nil;}
@@ -306,13 +319,36 @@ static BOOL brandView(UIView *v){
  }
  BOOL enabled=self.config ? [self.config[@"sections"][@"mods"] boolValue]:YES;
  CGFloat h=CGRectGetHeight(side.bounds),w=CGRectGetWidth(side.bounds);
- UIView *anchor=member(vc,"_gta6Icon");CGFloat pivot=anchor.superview==side?CGRectGetMaxY(originalFrame(anchor)):h*.5;
- for(UIView *v in side.subviews)if(v!=self.storeButton && !v.hidden && brandView(v))pivot=MAX(pivot,CGRectGetMaxY(originalFrame(v)));
- CGFloat row=MIN(42,MAX(0,h*.13)),k=h>0?(h-row-4)/h:1;
+ UIView *anchor=member(vc,"_gta6Icon");CGFloat afterGame=anchor.superview==side?CGRectGetMaxY(originalFrame(anchor)):0;
+ CGFloat upperBrand=CGFLOAT_MAX;
  for(UIView *v in side.subviews){
-  if(v==self.storeButton || v.hidden)continue;CGRect raw=originalFrame(v);
-  if(raw.size.height>h*.85)continue;
-  CGRect f=raw;if(enabled){f.origin.y=raw.origin.y*k+(CGRectGetMidY(raw)>pivot?row+4:0);f.size.height=raw.size.height*k;}
+  if(v==self.storeButton || v.hidden || v.alpha<.01)continue;
+  CGRect f=originalFrame(v);
+  if(CGRectGetMidY(f)>afterGame && f.size.height<h*.3 && brandView(v))upperBrand=MIN(upperBrand,CGRectGetMaxY(f));
+ }
+ // In collapsed mode text is hidden; use the next icon row following GTA VI.
+ CGFloat iconBottom=CGFLOAT_MAX;
+ for(UIView *v in side.subviews){
+  if(v==self.storeButton || v.hidden || v.alpha<.01)continue;
+  CGRect f=originalFrame(v);
+  if(CGRectGetMidY(f)>afterGame+2 && f.size.height>=16 && f.size.height<=64 &&
+     ([v isKindOfClass:UIControl.class] || [v isKindOfClass:UIImageView.class]))iconBottom=MIN(iconBottom,CGRectGetMaxY(f));
+ }
+ CGFloat pivot=MIN(upperBrand,iconBottom);
+ if(pivot==CGFLOAT_MAX)pivot=afterGame;
+ for(UIView *v in side.subviews){
+  if(v==self.storeButton || v.hidden)continue;CGRect f=originalFrame(v);
+  if(f.size.height<=64 && CGRectGetMinY(f)<pivot && CGRectGetMidY(f)>afterGame && CGRectGetMaxY(f)<=pivot+12)pivot=MAX(pivot,CGRectGetMaxY(f));
+ }
+ CGFloat row=MIN(44,MAX(0,h*.13)),next=h;
+ for(UIView *v in side.subviews){
+  if(v==self.storeButton || v.hidden || v.alpha<.01)continue;
+  CGRect f=originalFrame(v);if(f.size.height<h*.85 && CGRectGetMinY(f)>=pivot)next=MIN(next,CGRectGetMinY(f));
+ }
+ BOOL reserve=enabled && next-pivot<row+6;CGFloat k=reserve && h>0?(h-row-6)/h:1;
+ for(UIView *v in side.subviews){
+  if(v==self.storeButton || v.hidden)continue;CGRect raw=originalFrame(v);if(raw.size.height>h*.85)continue;
+  CGRect f=raw;if(reserve){f.origin.y=raw.origin.y*k+(CGRectGetMidY(raw)>pivot?row+6:0);f.size.height=raw.size.height*k;}
   objc_setAssociatedObject(v,&sidebarFrames,@[[NSValue valueWithCGRect:raw],[NSValue valueWithCGRect:f]],OBJC_ASSOCIATION_RETAIN_NONATOMIC);
   if(!CGRectEqualToRect(v.frame,f))v.frame=f;
  }
@@ -320,7 +356,7 @@ static BOOL brandView(UIView *v){
  NSString *caption=w>=96?@"  المودات":@"";if(![[self.storeButton titleForState:0] isEqual:caption])[self.storeButton setTitle:caption forState:0];
  NSString *sig=[NSString stringWithFormat:@"tabs=%lu sidebar=%.0fx%.0f modsY=%.0f",(unsigned long)visible.count,w,h,self.storeButton.frame.origin.y];
  if(![self.layoutSignature isEqual:sig]){self.layoutSignature=sig;trace(sig);trace([NSString stringWithFormat:@"tab widths before %@ after %@",geometry,[visible valueForKeyPath:@"frame"]]);}
- UIView *top=self.fallback?:self.panel;if(top && top.superview==vc.view)[vc.view bringSubviewToFront:top];if(self.activeBadge.superview==vc.view)[vc.view bringSubviewToFront:self.activeBadge];
+ UIView *top=self.fallback?:self.panel;if(top && top.superview==vc.view && [vc.view.subviews indexOfObject:top]+2<vc.view.subviews.count)[vc.view bringSubviewToFront:top];if(self.activeBadge.superview==vc.view && vc.view.subviews.lastObject!=self.activeBadge)[vc.view bringSubviewToFront:self.activeBadge];
 }
 -(void)userContentController:(WKUserContentController*)c didReceiveScriptMessage:(WKScriptMessage*)msg{
  if(msg.webView!=self.panel || !msg.frameInfo.mainFrame || !samePanel(msg.frameInfo.request.URL) || ![msg.body isKindOfClass:NSDictionary.class])return;
@@ -476,7 +512,7 @@ static BOOL saveMod(NSURL *tmp,NSDictionary *mod,NSURL *stage){
  [super didMoveToWindow];
  if(!self.window){if(kit.host==self.owner){kit.visible=NO;[kit hide];}return;}
  dispatch_async(dispatch_get_main_queue(),^{
-  UIViewController *vc=self.owner;if(self.window && vc.viewIfLoaded.window==self.window && !vc.presentedViewController){
+  UIViewController *vc=self.owner;if(self.window && vc.viewIfLoaded.window==self.window){
    trace(@"probe mounted inside launcher view");[kit appeared:vc];
   }
  });
@@ -491,7 +527,7 @@ static void onLoad(UIViewController *vc,SEL sel){
 static void onToggle(UIViewController *vc,SEL sel){((void(*)(id,SEL))toggle)(vc,sel);[vc.view setNeedsLayout];}
 static void onAppear(UIViewController *vc,SEL s,BOOL animated){((void(*)(id,SEL,BOOL))appeared)(vc,s,animated);[kit appeared:vc];}
 static void onDisappear(UIViewController *vc,SEL s,BOOL animated){((void(*)(id,SEL,BOOL))disappeared)(vc,s,animated);if(kit.host==vc){kit.visible=NO;[kit hide];}}
-static void onLayout(UIViewController *vc,SEL s){((void(*)(id,SEL))layout)(vc,s);if(kit.host==vc)[kit layout:vc];else if(vc.viewIfLoaded.window && !vc.presentedViewController)[kit appeared:vc];}
+static void onLayout(UIViewController *vc,SEL s){((void(*)(id,SEL))layout)(vc,s);if(kit.host==vc)[kit layout:vc];else if(vc.viewIfLoaded.window)[kit appeared:vc];}
 static IMP install(Class cls,SEL sel,IMP next){
  Method m=class_getInstanceMethod(cls,sel);if(!m)return NULL;
  IMP prev=method_getImplementation(m);
@@ -500,15 +536,21 @@ static IMP install(Class cls,SEL sel,IMP next){
 }
 static UIViewController *visibleLauncher(UIViewController *vc,Class cls){
  if(!vc || !vc.viewIfLoaded.window)return nil;
- if(vc.presentedViewController)return visibleLauncher(vc.presentedViewController,cls);
+ if(vc.presentedViewController){UIViewController *presented=visibleLauncher(vc.presentedViewController,cls);if(presented)return presented;}
  if([vc isKindOfClass:cls])return vc;
  for(UIViewController *child in vc.childViewControllers){UIViewController *found=visibleLauncher(child,cls);if(found)return found;}
  return nil;
 }
 static UIViewController *launcherOwningView(UIView *view,Class cls){
  if(view.hidden || view.alpha<.01 || !view.window)return nil;
+ if([view isKindOfClass:UIButton.class]){
+  UIButton *button=(UIButton*)view;
+  for(id target in button.allTargets){
+   if([target isKindOfClass:cls] && [[button actionsForTarget:target forControlEvent:UIControlEventTouchUpInside] containsObject:@"tabTapped:"] && [(UIViewController*)target viewIfLoaded].window==view.window)return target;
+  }
+ }
  UIResponder *owner=view.nextResponder;
- if([owner isKindOfClass:cls] && [(UIViewController*)owner viewIfLoaded]==view && ![(UIViewController*)owner presentedViewController])return (UIViewController*)owner;
+ if([owner isKindOfClass:cls] && [(UIViewController*)owner viewIfLoaded]==view)return (UIViewController*)owner;
  for(UIView *child in view.subviews.reverseObjectEnumerator){UIViewController *vc=launcherOwningView(child,cls);if(vc)return vc;}
  return nil;
 }
@@ -522,11 +564,11 @@ static void attach(void){
   toggle=install(cls,NSSelectorFromString(@"toggleSidebar"),(IMP)onToggle);
   trace(@"launcher class found; lifecycle attached");
  }
- if(!kit.visible){
+ if(!kit.visible || !kit.host.viewIfLoaded.window){
   NSMutableOrderedSet *windows=[NSMutableOrderedSet orderedSetWithArray:UIApplication.sharedApplication.windows];
   for(UIScene *scene in UIApplication.sharedApplication.connectedScenes)if([scene isKindOfClass:UIWindowScene.class] && scene.activationState!=UISceneActivationStateBackground)[windows addObjectsFromArray:[(UIWindowScene*)scene windows]];
   for(UIWindow *window in windows){
-   if(window.hidden || window.windowLevel!=UIWindowLevelNormal)continue;
+   if(window.hidden || window.alpha<.01)continue;
    UIViewController *vc=visibleLauncher(window.rootViewController,cls)?:launcherOwningView(window,cls);if(vc){[kit appeared:vc];break;}
   }
  }
@@ -534,7 +576,7 @@ static void attach(void){
  if(!kit.config)[kit refreshIfNeeded];
 }
 __attribute__((constructor)) static void startKit(void){
- @autoreleasepool{trace(@"startKit entered · build 7");}
+ @autoreleasepool{trace(@"startKit entered · build 8");}
  dispatch_async(dispatch_get_main_queue(),^{
   for(NSString *name in @[UIApplicationDidFinishLaunchingNotification,UIApplicationDidBecomeActiveNotification,UIWindowDidBecomeKeyNotification,UIWindowDidBecomeVisibleNotification,UISceneDidActivateNotification])
    [NSNotificationCenter.defaultCenter addObserverForName:name object:nil queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification *note){attach();}];

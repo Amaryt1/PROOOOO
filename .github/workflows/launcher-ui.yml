@@ -1,0 +1,15 @@
+name: Launcher UIKit regression
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['source/AMARYTKit.m', 'scripts/simulator/**', '.github/workflows/launcher-ui.yml']
+permissions:
+  contents: read
+jobs:
+  ui:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/simulator/run.sh
