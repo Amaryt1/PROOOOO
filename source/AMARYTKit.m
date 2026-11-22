@@ -454,6 +454,7 @@ static BOOL regularFolder(NSURL *url){
   [self render];return;
  }
  trace([NSString stringWithFormat:@"invoke original importer %@",mod[@"id"]]);
+ BOOL alreadyInstalled=installedFolders(mod[@"expectedMods"]);
  self.pendingInstallId=mod[@"id"];self.pendingInstallDirs=mod[@"expectedMods"];self.installChecks=0;
  self.status=@"جارٍ استيراد المود إلى اللعبة…";[self render];
  @try{
@@ -464,7 +465,11 @@ static BOOL regularFolder(NSURL *url){
   self.status=@"تعذّر الاستيراد تلقائيًا. استخدم الاستيراد اليدوي.";
   [self render];return;
  }
- if(self.pendingInstallDirs.count){
+ if(alreadyInstalled){
+  self.pendingInstallId=nil;self.pendingInstallDirs=nil;
+  self.status=@"المود موجود مسبقًا؛ يمكنك مراجعة نتيجة إعادة الاستيراد بالقائمة الأصلية.";
+  [self render];
+ }else if(self.pendingInstallDirs.count){
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW,3*NSEC_PER_SEC),dispatch_get_main_queue(),^{if(self.pendingInstallId)[self pollNativeImport];});
  }else{
   self.pendingInstallId=nil;self.pendingInstallDirs=nil;
