@@ -1,0 +1,46 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{font:16px -apple-system,sans-serif;background:#000a;color:#f5f3ef;display:grid;place-items:center;padding:max(12px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}main{width:min(100%,620px);max-height:100%;overflow:auto;background:#202124;border:1px solid #555;border-radius:18px;padding:18px}h1{font-size:22px;margin:8px 0}p{white-space:pre-wrap;line-height:1.5}button,input,select{font:inherit;border-radius:10px;padding:9px 12px;border:1px solid #777;background:#333;color:white;margin:3px}button.primary{background:var(--accent,#d19b56);color:var(--ink,#181818);font-weight:700}img{max-height:95px;max-width:100%;object-fit:contain}article{border-top:1px solid #555;margin-top:12px;padding-top:8px}small{color:#ccc}input{width:min(100%,260px)}
+</style><main id="p" role="dialog" aria-modal="true"></main><script>
+'use strict';
+const post=(action,id='')=>webkit.messageHandlers.amar.postMessage({action,id});
+let state, query='', category='', favoritesOnly=false;
+const panel=document.querySelector('main');
+function add(tag,value,parent=panel){const e=document.createElement(tag);e.textContent=value;parent.appendChild(e);return e}
+function button(name,action,parent=panel,primary=false){const b=add('button',name,parent);b.onclick=action;if(primary)b.className='primary';return b}
+function photo(url,parent=panel){if(!url)return;const i=add('img','',parent);i.loading='lazy';i.alt='';i.onerror=()=>i.remove();i.src=url}
+function entries(parent){
+ parent.textContent='';
+ const filtered=state.catalog.mods.filter(m=>(!category || category===m.category) && (!favoritesOnly || state.favorites.includes(m.id)) && (m.name+' '+m.description).toLowerCase().includes(query.toLowerCase()));
+ if(!filtered.length)add('p',state.catalog.mods.length?'ما في مودات تطابق بحثك.':'لا توجد مودات منشورة حاليًا.',parent);
+ for(const m of filtered){
+  const a=add('article','',parent);photo(m.image,a);add('h3',m.name,a);add('p',m.description,a);add('small',m.category+' · '+(m.size/1048576).toFixed(2)+' MB · '+m.compatibility,a);add('br','',a);
+  const b=button('تنزيل الملف',()=>post('download',m.id),a,true);b.disabled=state.version<m.minKit || state.version>m.maxKit;
+  button(state.favorites.includes(m.id)?'إزالة من المفضلة':'حفظ في المفضلة',()=>post('favorite',m.id),a)
+ }
+}
+function render(s){
+ state=s;panel.textContent='';const c=s.config,kind=s.kind;
+ document.body.style.setProperty('--accent',c.identity.accent);
+ const rgb=c.identity.accent.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
+ document.body.style.setProperty('--ink',rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722>.179?'#000':'#fff');
+ add('small',c.identity.name+' · V'+s.version);
+ if(kind==='catalog'){
+  add('h1','المودات');button('إغلاق',()=>post('close'));button('تحديث القائمة',()=>post('refreshMods'));button('فحص التحديث',()=>post('refreshConfig'));
+  if(s.last)add('small','آخر اتصال بالإعدادات '+new Date(s.last*1000).toLocaleString('ar'));
+  const info=add('details','');add('summary','معلومات النسخة والتواصل',info);c.news.forEach(n=>add('p',n,info));button('مسح ذاكرة القائمة',()=>post('clearCatalog'),info);
+  for(const [key,name] of Object.entries({telegram:'تيليجرام',instagram:'إنستغرام',tiktok:'تيك توك'}))button(name,()=>post('social',key),info);
+  add('p','بعد التنزيل، افتح استيراد المودات في المشغّل واختر الملف من مجلد AMARYT-Mods إذا كان المستورد يدعم صيغته.',info);
+  const search=add('input','');search.type='search';search.placeholder='ابحث عن مود';search.value=query;
+  const select=add('select','');for(const k of ['',...s.catalog.categories]){const o=add('option',k||'كل التصنيفات',select);o.value=k}select.value=category;
+  const toggle=button(favoritesOnly?'عرض الكل':'المفضلة',()=>{favoritesOnly=!favoritesOnly;render(state)});
+  add('p',s.status||'');const list=add('section','');search.oninput=()=>{query=search.value;entries(list)};select.onchange=()=>{category=select.value;entries(list)};entries(list);return
+ }
+ const update=kind==='force'||kind==='optional',m=update?c.update:c[kind];
+ photo(m.image||c.identity.logo);add('h1',m.title);add('p',m.body);
+ if(update){add('small','الإصدار '+(kind==='force'?m.minimum:m.latest));const ul=add('ul','');m.features.forEach(x=>add('li',x,ul))}
+ button(m.action,()=>post(update?'update':'close'),panel,true);
+ if(m.contact&&m.contactURL)button(m.contact,()=>post('contact'));
+ if(kind!=='force')button('إغلاق',()=>post('close'));
+}
+</script></html>
