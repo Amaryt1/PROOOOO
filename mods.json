@@ -9,6 +9,106 @@
     "الرسوميات",
     "مودات طور القصة"
   ],
-  "mods": [],
+  "mods": [
+    {
+      "id": "nissan-gtr",
+      "name": "Nissan GT-R R35 — حزمة اختبار",
+      "description": "حزمة ملفات سيارة Nissan GT-R R35. للتحميل والاختبار؛ الاستيراد والظهور داخل اللعبة غير مثبتين. المصدر: Rymex47/free-modpack (MPL-2.0). غلاف توضيحي وليس لقطة شاشة للمود.",
+      "category": "السيارات",
+      "image": "https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/images/mods/nissan-gtr.svg",
+      "minKit": 5,
+      "maxKit": 5,
+      "compatibility": "AMAR YT V5 / Build 8: ملفات RSC7 مُتحقَّق منها؛ التثبيت أو الظهور داخل اللعبة لم يُختبر.",
+      "files": [
+        {
+          "name": "gtr.yft",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/gtr/stream/gtr.yft",
+          "size": 1995872,
+          "sha256": "b929f637ee875c027a3cecefb9c871177b5e7935c1c8330b0b8952c5be1e1f55",
+          "extension": "yft"
+        },
+        {
+          "name": "gtr_hi.yft",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/gtr/stream/gtr_hi.yft",
+          "size": 7677225,
+          "sha256": "785d82c9994d96d0a44d5f62cbb31ed3f67fb51f2ffef390c43c794122dec086",
+          "extension": "yft"
+        },
+        {
+          "name": "gtr.ytd",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/gtr/stream/gtr.ytd",
+          "size": 1872481,
+          "sha256": "1429023e4cb0734f93532fadf550d7d772ae050bfd8ce08678c1a8fd6de9000f",
+          "extension": "ytd"
+        }
+      ]
+    },
+    {
+      "id": "dodge-charger",
+      "name": "Dodge Charger 2018 — حزمة اختبار",
+      "description": "حزمة ملفات سيارة Dodge Charger 2018. للتنزيل والاختبار؛ قد يتطلب التثبيت إعدادات مركبة إضافية. المصدر: Rymex47/free-modpack (MPL-2.0). غلاف توضيحي وليس لقطة شاشة للمود.",
+      "category": "السيارات",
+      "image": "https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/images/mods/dodge-charger.svg",
+      "minKit": 5,
+      "maxKit": 5,
+      "compatibility": "AMAR YT V5 / Build 8: ملفات RSC7 مُتحقَّق منها؛ التثبيت أو الظهور داخل اللعبة لم يُختبر.",
+      "files": [
+        {
+          "name": "sjdodge.yft",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/charger/stream/sjdodge.yft",
+          "size": 5422394,
+          "sha256": "22101e87907df4015c1c8912dd5272bd5e52cd09355983ff4b2e823167f00f11",
+          "extension": "yft"
+        },
+        {
+          "name": "sjdodge_hi.yft",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/charger/stream/sjdodge_hi.yft",
+          "size": 5423594,
+          "sha256": "077ac13883b53be48649d4eac22b1fbd9d3856765f2aa688c0f6eb4798e9ddc8",
+          "extension": "yft"
+        },
+        {
+          "name": "sjdodge.ytd",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/charger/stream/sjdodge.ytd",
+          "size": 2697306,
+          "sha256": "90b2c5c54265c512ff0b6c231881fa4ae618d32860e64e40b9d843fec88b2bc0",
+          "extension": "ytd"
+        }
+      ]
+    },
+    {
+      "id": "lamborghini-huracan",
+      "name": "Lamborghini Huracán 2018 — حزمة اختبار",
+      "description": "حزمة ملفات سيارة Lamborghini Huracán 2018. تنزيل وتحقق؛ لا تعني اكتمال التثبيت أو ظهور السيارة تلقائيًا. المصدر: Rymex47/free-modpack (MPL-2.0). غلاف توضيحي وليس لقطة شاشة للمود.",
+      "category": "السيارات",
+      "image": "https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/images/mods/lamborghini-huracan.svg",
+      "minKit": 5,
+      "maxKit": 5,
+      "compatibility": "AMAR YT V5 / Build 8: ملفات RSC7 مُتحقَّق منها؛ التثبيت أو الظهور داخل اللعبة لم يُختبر.",
+      "files": [
+        {
+          "name": "lp610.yft",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/lambo/stream/lp610.yft",
+          "size": 10140677,
+          "sha256": "077fbe5b5c1e8d78789cd3eb91a0c3f21e1f9435713fc2bb7e060802fc975f7b",
+          "extension": "yft"
+        },
+        {
+          "name": "lp610_hi.yft",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/lambo/stream/lp610_hi.yft",
+          "size": 8604706,
+          "sha256": "8cfdc1afa71ff27cc435ce34b79aa8cc38f23d210f011816d9b504585aff4cca",
+          "extension": "yft"
+        },
+        {
+          "name": "lp610.ytd",
+          "url": "https://raw.githubusercontent.com/Rymex47/free-modpack/b338e44abedb42cc3d14a0dee3147fac58495252/modpack/lambo/stream/lp610.ytd",
+          "size": 13269439,
+          "sha256": "c9fd6fe5bda80edeb8c37184d7f7bcdea277d468b66f97b9c8e093f01b153f7d",
+          "extension": "ytd"
+        }
+      ]
+    }
+  ],
   "fileFormat": "files-v1"
 }
