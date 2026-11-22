@@ -1,0 +1,72 @@
+name: Publish Iraqi Garage 3 Cars mod
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-iraqi-garage.yml'
+      - 'scripts/publish_iraqi_garage.py'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare-release:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub draft release for the original ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="iraqi-garage-3cars-v1"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release already exists: $tag"
+          else
+            gh release create "$tag" --draft \
+              --title "Iraqi Garage - Saipa, Peugeot 405 and Charger" \
+              --notes "Upload the original Iraqi_Garage_3_Cars_Realistic_Driving_Audio_Fixed_FiveStarPort.zip (73,604,201 bytes), then publish this draft. The release-publish workflow verifies SHA-256 and DLC structure and only then enables the mod in mods.json."
+          fi
+          echo "Release page: https://github.com/Amaryt1/PROOOOO/releases"
+
+  verify-and-publish:
+    if: github.event_name == 'release' && github.event.action == 'published' && github.event.release.tag_name == 'iraqi-garage-3cars-v1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Download exact original ZIP asset from GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download iraqi-garage-3cars-v1 \
+            --pattern 'Iraqi_Garage_3_Cars_Realistic_Driving_Audio_Fixed_FiveStarPort.zip' \
+            --dir "$RUNNER_TEMP"
+          test -f "$RUNNER_TEMP/Iraqi_Garage_3_Cars_Realistic_Driving_Audio_Fixed_FiveStarPort.zip"
+      - name: Verify the complete three-car ZIP and update mod list
+        run: |
+          python3 scripts/publish_iraqi_garage.py \
+            --archive "$RUNNER_TEMP/Iraqi_Garage_3_Cars_Realistic_Driving_Audio_Fixed_FiveStarPort.zip" \
+            --catalog mods.json
+      - name: Validate resulting published catalog
+        run: node scripts/test.js
+      - name: Commit catalog only if the exact ZIP passed every check
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mods.json
+          if git diff --staged --quiet; then
+            echo "mod catalog already contains this archive"
+          else
+            git commit -m "Publish exact Iraqi Garage 3 Cars ZIP in remote mod store"
+            git push origin HEAD:main
+          fi
