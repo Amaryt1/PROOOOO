@@ -5,6 +5,11 @@ on:
       - '.github/workflows/build-amaryt-library.yml'
       - 'source/AMARYTKit.m'
       - 'scripts/compile.sh'
+      - 'source/policy.js'
+      - 'source/panel.html'
+      - 'source/local-mods.json'
+      - 'mods.json'
+      - 'scripts/test.js'
   workflow_dispatch:
 permissions:
   contents: read
@@ -22,6 +27,8 @@ jobs:
           file "$RUNNER_TEMP/AMARYTKit.dylib"
           xcrun dwarfdump --uuid "$RUNNER_TEMP/AMARYTKit.dylib"
           shasum -a 256 "$RUNNER_TEMP/AMARYTKit.dylib"
+      - name: Run Build9 policy and UI regression tests
+        run: node scripts/test.js
       - name: Package library
         run: |
           cp "$RUNNER_TEMP/AMARYTKit.dylib" AMARYTKit.dylib
@@ -32,4 +39,10 @@ jobs:
           path: |
             AMARYTKit.dylib
             AMARYTKit.sha256
+            source/policy.js
+            source/panel.html
+            source/local-mods.json
+            mods.json
+            config.json
+            scripts/test.js
           if-no-files-found: error
