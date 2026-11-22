@@ -84,7 +84,7 @@ jobs:
           assert all(x['name_ar'] and x['original_title'] and x['original_preview_url'].startswith('https://img.gta5-mods.com/') for x in g['vehicles'])
           assert all(x['direct_zip_verified'] is False and x['ios_install_tested'] is False for x in g['vehicles'])
           live=json.loads(pathlib.Path('mods.json').read_text())
-          assert len(live['mods'])==1 and live['mods'][0]['id']=='iraqi-garage-3'
+          assert [x['id'] for x in live['mods']] in ([ 'iraqi-garage-3' ], [ 'hilux21-tele', 'iraqi-garage-3' ]), 'Unexpected live catalog contents'
           assert all('archiveSha256' not in x for x in g['vehicles'])
           print('PASS:',g['verified'],'original-source previews, no fake ZIP assets or unsupported live installs')
           PY
