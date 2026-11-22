@@ -23,9 +23,8 @@ console.log('Multi-file manifests, legacy entries, duplicates, unsafe names and 
 
 
 const build9=JSON.parse(fs.readFileSync('source/local-mods.json','utf8'));
-assert(ctx.validMods(build9),'Known-good packaged garage manifest must validate');
-const bundled=build9.mods[0];assert.equal(bundled.bundleArchive,'pilot-cars.zip');
-assert.equal(bundled.archiveSha256.length,64);
+assert(ctx.validMods(build9),'Empty offline fallback must validate');
+assert.equal(build9.mods.length,0,'No vehicle resources may be bundled');
 const archiveTest={...m,archiveURL:'https://example.com/car.zip',archiveSize:123456,archiveSha256:'c'.repeat(64),expectedMods:['safe-car']};
 assert(ctx.validMods(catalog(archiveTest)));
 for(const bad of [
@@ -37,7 +36,7 @@ for(const bad of [
  {...archiveTest,expectedMods:['../GTAV']},
  {...archiveTest,expectedMods:['a/b']}
  ])assert(!ctx.validMods(catalog(bad)),'Reject unsafe ZIP metadata');
-assert(!ctx.validMods(catalog({...bundled,bundleArchive:'other.zip'})));
+assert(!ctx.validMods(catalog({...archiveTest,bundleArchive:'pilot-cars.zip'})));
 const panel=fs.readFileSync('source/panel.html','utf8');
 assert(panel.includes("post('download',m.id)"));
 assert(panel.includes("post('cancelDownload')"));
@@ -57,3 +56,8 @@ const browserVM=vm.createContext(browserGlobals);
 vm.runInContext(markupScript[1],browserVM,{filename:'panel.html'});
 assert.equal(vm.runInContext('typeof render',browserVM),'function');
 console.log('Catalog JavaScript initializes even with reserved window.top (Build9 hotfix).');
+
+assert(!native.includes('catalogWithPilot'), 'No bundled-pilot injection');
+assert(!native.includes('pilot-cars.zip'), 'No bundled vehicle data references');
+assert(!panel.includes('function top('), 'Reserved Window.top global collision must remain fixed');
+console.log('Remote-only catalog, clean UI and native ZIP integration verified.');
