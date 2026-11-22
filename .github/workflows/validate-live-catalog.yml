@@ -6,6 +6,8 @@ on:
       - 'source/policy.js'
       - 'scripts/test.js'
       - 'scripts/inspect_dlc_zip.py'
+      - 'scripts/normalize_addon_zip.py'
+      - 'research/iraq-gulf-mod-candidates-ar.json'
       - '.github/workflows/validate-live-catalog.yml'
   workflow_dispatch:
 permissions:
@@ -35,6 +37,39 @@ jobs:
             fail=subprocess.run([sys.executable,'scripts/inspect_dlc_zip.py',str(bad)],capture_output=True,text=True)
             assert fail.returncode!=0,fail.stdout
             print('DLC ZIP validator passed positive/negative safety tests')
+          PY
+      - name: Test add-on ZIP normalizer and separate research catalog
+        run: |
+          python3 -m py_compile scripts/normalize_addon_zip.py
+          python3 - <<'PY'
+          import json,pathlib,subprocess,sys,tempfile,zipfile
+          r=json.loads(pathlib.Path('research/iraq-gulf-mod-candidates-ar.json').read_text())
+          assert r['schema']==1 and len(r['candidates'])>=10
+          seen=set()
+          for candidate in r['candidates']:
+            assert candidate['name_ar'] and candidate['source_page'].startswith('https://')
+            assert candidate['binary_downloaded'] is False and candidate['ios_auto_install_verified'] is False
+            assert candidate['redistribution_permission_verified'] is False
+            assert candidate['id'] not in seen
+            seen.add(candidate['id'])
+          live=json.loads(pathlib.Path('mods.json').read_text())
+          assert all(x['id'].startswith('candidate-') is False for x in live['mods'])
+          with tempfile.TemporaryDirectory() as d:
+            root=pathlib.Path(d)
+            valid=root/'original.zip'
+            output=root/'normalized.zip'
+            invalid=root/'loose-yft.zip'
+            with zipfile.ZipFile(valid,'w',zipfile.ZIP_DEFLATED) as z:
+              z.writestr('AddOn/hilux21/dlc.rpf',b'7FPR'+bytes(200))
+            with zipfile.ZipFile(invalid,'w',zipfile.ZIP_DEFLATED) as z:
+              z.writestr('stream/car.yft',b'RSC7'+bytes(200))
+            ok=subprocess.run([sys.executable,'scripts/normalize_addon_zip.py',str(valid),str(output)],capture_output=True,text=True)
+            assert ok.returncode==0,ok.stderr
+            with zipfile.ZipFile(output) as z:
+              assert z.namelist()==['update/x64/dlcpacks/hilux21/dlc.rpf']
+            failure=subprocess.run([sys.executable,'scripts/normalize_addon_zip.py',str(invalid),str(root/'bad.zip')],capture_output=True,text=True)
+            assert failure.returncode!=0
+          print('PASS: Arabic research catalog isolated; genuine RPF7 Add-on normalized; loose YFT rejected')
           PY
       - name: Check every archive URL matches a released ZIP
         run: |
