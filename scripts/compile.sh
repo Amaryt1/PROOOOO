@@ -8,4 +8,4 @@ if [[ -n "${ZIG:-}" ]]; then
 else
   compiler=(xcrun --sdk iphoneos clang -arch arm64 -miphoneos-version-min=13.0)
 fi
-"${compiler[@]}" -Oz -fobjc-arc -fblocks -dynamiclib source/AMARYTKit.m -framework UIKit -framework WebKit -framework Foundation -framework JavaScriptCore -framework QuartzCore -framework CoreGraphics -lobjc -Wl,-install_name,@rpath/AMARYTKit.dylib -o "$out"
+"${compiler[@]}" -Oz -fobjc-arc -fblocks -dynamiclib source/AMARYTKit.m -framework UIKit -framework WebKit -framework Foundation -framework JavaScriptCore -framework QuartzCore -framework CoreGraphics -lobjc -Wl,-headerpad,4000 -Wl,-install_name,@rpath/AMARYTKit.dylib -o "$out"
