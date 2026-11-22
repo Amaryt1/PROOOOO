@@ -3,15 +3,17 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <objc/runtime.h>
+#import <os/log.h>
 
 static NSString *const configURL=@"https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/config.json";
 static NSString *const storeKey=@"AMARYTKit5.";
 static const NSInteger kitVersion=5;
 static NSUserDefaults *prefs(void){return NSUserDefaults.standardUserDefaults;}
-static NSString *key(NSString *s){return [storeKey stringByAppendingString:s];}
+static NSString *key(NSString *s){if([s isEqual:@"config"])return @"AMARYTKit7.config";return [storeKey stringByAppendingString:s];}
 static NSURL *asset(NSString *name){return [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:[@"AMARYTKit" stringByAppendingPathComponent:name]];}
 static id decode(NSData *data){return data.length?[NSJSONSerialization JSONObjectWithData:data options:0 error:nil]:nil;}
 static void trace(NSString *message){
+ os_log_with_type(OS_LOG_DEFAULT,OS_LOG_TYPE_DEFAULT,"AMARYTKit: %{public}@",message);
  static dispatch_queue_t queue;static dispatch_once_t once;
  dispatch_once(&once,^{queue=dispatch_queue_create("AMARYT.diagnostics",DISPATCH_QUEUE_SERIAL);});
  dispatch_async(queue,^{
@@ -20,7 +22,7 @@ static void trace(NSString *message){
   NSData *line=[[NSString stringWithFormat:@"%@ %@\n",NSDate.date,message] dataUsingEncoding:NSUTF8StringEncoding];
   NSFileHandle *h=[NSFileHandle fileHandleForWritingToURL:url error:nil];
   if(!h){[line writeToURL:url atomically:YES];return;}
-  @try{if([h seekToEndOfFile]>65536)[h truncateFileAtOffset:0];[h writeData:line];}@finally{[h closeFile];}
+  @try{if([h seekToEndOfFile]>65536)[h truncateFileAtOffset:0];[h writeData:line];}@catch(NSException *ex){os_log_error(OS_LOG_DEFAULT,"AMARYTKit: diagnostic write failed");}@finally{[h closeFile];}
  });
 }
 static NSString *jsonText(id value){
@@ -53,7 +55,10 @@ static id member(id object,const char *name){
 @property(nonatomic) NSTimeInterval checked;
 @property(nonatomic,strong) NSString *connection;
 @property(nonatomic,strong) NSString *layoutSignature;
-@property(nonatomic,weak) UIViewController *lastHost;
+@property(nonatomic,strong) UILabel *activeBadge;
+@property(nonatomic,strong) UIScrollView *tabScroll;
+@property(nonatomic,weak) UIView *tabParent;
+@property(nonatomic,strong) NSDictionary *shownConfig;
 @end
 static AMARYTKit *kit;
 @implementation AMARYTKit
@@ -77,8 +82,14 @@ static AMARYTKit *kit;
 }
 -(void)loadConfig{
  NSDictionary *cached=[prefs() dictionaryForKey:key(@"config")][@"value"];
+ NSDictionary *legacy=[prefs() dictionaryForKey:@"AMARYTKit5.config"][@"value"];
+ if(!cached && [self valid:legacy mods:NO] && [[[self.policy[@"mode"] callWithArguments:@[legacy,@(kitVersion),@(NSDate.date.timeIntervalSince1970*1000)]] toString] isEqual:@"force"])cached=legacy;
  self.config=[self valid:cached mods:NO]?cached:decode([NSData dataWithContentsOfURL:asset(@"config.json")]);
- if(![self valid:self.config mods:NO])self.config=nil;
+ if(![self valid:self.config mods:NO]){
+  NSDictionary *local=decode([NSData dataWithContentsOfURL:asset(@"config.json")]);
+  self.config=[local[@"welcome"][@"title"] isKindOfClass:NSString.class]?local:nil;
+  trace(@"using bundled configuration after policy validation failure");
+ }
  trace(self.config?@"config loaded and validated":@"config validation failed");
 }
 -(void)loadMods{
@@ -104,12 +115,21 @@ static AMARYTKit *kit;
  if(!self.started || NSProcessInfo.processInfo.systemUptime-self.checked>=30){self.started=YES;[self fetch:NO];}
 }
 -(void)appeared:(UIViewController*)vc{
- self.host=vc;self.visible=YES;[self layout:vc];[self evaluate];
+ if(!vc.viewIfLoaded.window || vc.presentedViewController)return;
+ if(self.host!=vc){[self hide];self.layoutSignature=nil;[self.activeBadge removeFromSuperview];self.activeBadge=nil;}
+ self.host=vc;self.visible=YES;
+ if(self.activeBadge.superview!=vc.view){
+  UILabel *badge=[UILabel new];badge.text=@"  AMAR YT Kit Active · Build 7  ";badge.font=[UIFont systemFontOfSize:10 weight:UIFontWeightSemibold];badge.textColor=UIColor.whiteColor;badge.backgroundColor=[UIColor colorWithWhite:.08 alpha:.85];badge.userInteractionEnabled=NO;badge.layer.cornerRadius=5;badge.clipsToBounds=YES;
+  badge.translatesAutoresizingMaskIntoConstraints=NO;[vc.view addSubview:badge];self.activeBadge=badge;
+  [NSLayoutConstraint activateConstraints:@[[badge.bottomAnchor constraintEqualToAnchor:vc.view.safeAreaLayoutGuide.bottomAnchor constant:-3],[badge.centerXAnchor constraintEqualToAnchor:vc.view.safeAreaLayoutGuide.centerXAnchor]]];
+  trace([NSString stringWithFormat:@"badge attached host=%@ window=%@",NSStringFromClass(vc.class),NSStringFromClass(vc.view.window.class)]);
+ }
+ [self layout:vc];[self evaluate];
  trace(@"launcher visible");[self refreshIfNeeded];
 }
 -(void)hide{
  [self.panel.configuration.userContentController removeScriptMessageHandlerForName:@"amar"];
- [self.fallback removeFromSuperview];self.fallback=nil;[self.panel removeFromSuperview];self.panel=nil;self.kind=nil;self.ready=NO;
+ [self.fallback removeFromSuperview];self.fallback=nil;self.shownConfig=nil;[self.panel removeFromSuperview];self.panel=nil;self.kind=nil;self.ready=NO;
  [self.expiry invalidate];self.expiry=nil;
 }
 -(NSString*)updateMode{return [[self.policy[@"mode"] callWithArguments:@[self.config,@(kitVersion),@(NSDate.date.timeIntervalSince1970*1000)]] toString];}
@@ -123,7 +143,7 @@ static AMARYTKit *kit;
  if([mode isEqual:@"force"]){[self show:@"force"];return;}
  if([self.kind isEqual:@"force"])[self hide];
  if([self.kind isEqual:@"catalog"] && [self.config[@"sections"][@"mods"] boolValue]){[self render];return;}
- for(NSString *kind in @[@"optional",@"welcome",@"notification"]){
+ for(NSString *kind in @[@"welcome",@"notification",@"optional"]){
   BOOL optional=[kind isEqual:@"optional"];
   if(optional?![mode isEqual:kind]:![self.config[kind][@"enabled"] boolValue])continue;
   NSString *marker=[self seenKey:kind];
@@ -134,7 +154,8 @@ static AMARYTKit *kit;
 }
 -(void)show:(NSString*)kind{
  if(!self.visible || !self.host.viewIfLoaded.window)return;
- BOOL native=self.fallback && [self.kind isEqual:kind];
+ BOOL native=![kind isEqual:@"catalog"];
+ if(native && self.fallback.superview==self.host.view && [self.kind isEqual:kind] && self.shownConfig==self.config)return;
  if(self.fallback && !native)[self hide];
  if(![self.kind isEqual:kind])trace([@"display " stringByAppendingString:kind]);
  if(!native && !self.panel){
@@ -146,7 +167,7 @@ static AMARYTKit *kit;
   [p loadFileURL:asset(@"panel.html") allowingReadAccessToURL:asset(@"panel.html").URLByDeletingLastPathComponent];
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW,3*NSEC_PER_SEC),dispatch_get_main_queue(),^{if(self.panel==p && !self.ready)[self nativePanel];});
  }
- self.kind=kind;if(native)[self nativePanel];else{[self.host.view bringSubviewToFront:self.panel];[self render];}
+ self.kind=kind;if(native){self.shownConfig=self.config;[self nativePanel];}else{[self.host.view bringSubviewToFront:self.panel];[self render];}
  [self.expiry invalidate];self.expiry=nil;
  if([kind isEqual:@"force"]){
   double end=[[self.policy evaluateScript:@"Date.parse"] callWithArguments:@[self.config[@"update"][@"expiresUTC"]]].toDouble/1000;
@@ -163,34 +184,70 @@ static AMARYTKit *kit;
 }
 -(void)render{
  if(!self.ready || !self.kind)return;
- NSDictionary *state=@{@"kind":self.kind,@"config":self.config,@"version":@(kitVersion),@"catalog":self.catalog?:@{@"categories":@[],@"mods":@[]},@"favorites":[prefs() arrayForKey:key(@"favorites")]?:@[],@"downloaded":[self downloaded],@"busy":@(self.transfer!=nil),@"connection":self.connection?:@"",@"build":@"6",@"status":self.status?:@"",@"last":@([prefs() doubleForKey:key(@"last")])};
+ NSDictionary *state=@{@"kind":self.kind,@"config":self.config,@"version":@(kitVersion),@"catalog":self.catalog?:@{@"categories":@[],@"mods":@[]},@"favorites":[prefs() arrayForKey:key(@"favorites")]?:@[],@"downloaded":[self downloaded],@"busy":@(self.transfer!=nil),@"connection":self.connection?:@"",@"build":@"7",@"status":self.status?:@"",@"last":@([prefs() doubleForKey:key(@"last")])};
  NSData *data=[NSJSONSerialization dataWithJSONObject:state options:0 error:nil];
  NSString *json=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
  WKWebView *web=self.panel;if(json)[web evaluateJavaScript:[NSString stringWithFormat:@"render(%@)",json] completionHandler:^(id result,NSError *error){if(error && self.panel==web)[self nativePanel];}];
 }
 -(void)openStore{if([self.config[@"sections"][@"mods"] boolValue] && ![[self updateMode] isEqual:@"force"]){[self loadMods];[self show:@"catalog"];[self fetch:YES];}}
--(void)nativeAction:(UIButton*)button{[self action:button.accessibilityIdentifier ident:@""];}
+-(void)nativeAction:(UIButton*)button{
+ NSString *a=button.accessibilityIdentifier;
+ if([a hasPrefix:@"social-"]){[self action:@"social" ident:[a substringFromIndex:7]];return;}
+ if([a isEqual:@"mods"]){[self openStore];return;}
+ if([a isEqual:@"news"]){
+  UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"أخبار AMAR YT" message:[self.config[@"news"] count]?[self.config[@"news"] componentsJoinedByString:@"\n"]:@"لا توجد أخبار منشورة حاليًا." preferredStyle:UIAlertControllerStyleAlert];
+  [alert addAction:[UIAlertAction actionWithTitle:@"إغلاق" style:UIAlertActionStyleCancel handler:nil]];[self.host presentViewController:alert animated:YES completion:nil];return;
+ }[self action:a ident:@""];
+}
 -(void)nativePanel{
- NSString *kind=self.kind;if(!kind || !self.visible)return;
- trace([@"native fallback " stringByAppendingString:kind]);
+ NSString *kind=self.kind;if(!self.visible || !kind || !self.host.viewIfLoaded.window)return;
+ BOOL welcome=[kind isEqual:@"welcome"],forced=[kind isEqual:@"force"],update=forced || [kind isEqual:@"optional"];
+ NSDictionary *m=self.config[update?@"update":kind];
  [self.panel.configuration.userContentController removeScriptMessageHandlerForName:@"amar"];
- [self.panel removeFromSuperview];self.panel=nil;self.ready=NO;
- [self.fallback removeFromSuperview];
- UIView *root=self.host.view;UIView *shade=[[UIView alloc]initWithFrame:root.bounds];self.fallback=shade;
- shade.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
- shade.backgroundColor=[UIColor colorWithWhite:0 alpha:.82];shade.accessibilityViewIsModal=YES;[root addSubview:shade];
- UIScrollView *scroll=[UIScrollView new];scroll.translatesAutoresizingMaskIntoConstraints=NO;[shade addSubview:scroll];
- UIStackView *stack=[UIStackView new];stack.axis=UILayoutConstraintAxisVertical;stack.spacing=10;stack.translatesAutoresizingMaskIntoConstraints=NO;[scroll addSubview:stack];
- UILayoutGuide *g=shade.safeAreaLayoutGuide;
- [NSLayoutConstraint activateConstraints:@[[scroll.leadingAnchor constraintEqualToAnchor:g.leadingAnchor constant:24],[scroll.trailingAnchor constraintEqualToAnchor:g.trailingAnchor constant:-24],[scroll.topAnchor constraintEqualToAnchor:g.topAnchor constant:18],[scroll.bottomAnchor constraintEqualToAnchor:g.bottomAnchor constant:-18],[stack.leadingAnchor constraintEqualToAnchor:scroll.contentLayoutGuide.leadingAnchor],[stack.trailingAnchor constraintEqualToAnchor:scroll.contentLayoutGuide.trailingAnchor],[stack.topAnchor constraintEqualToAnchor:scroll.contentLayoutGuide.topAnchor],[stack.bottomAnchor constraintEqualToAnchor:scroll.contentLayoutGuide.bottomAnchor],[stack.widthAnchor constraintEqualToAnchor:scroll.frameLayoutGuide.widthAnchor]]];
- BOOL update=[kind isEqual:@"force"] || [kind isEqual:@"optional"];NSDictionary *m=self.config[update?@"update":kind];BOOL store=[kind isEqual:@"catalog"];
- NSMutableArray *lines=[NSMutableArray arrayWithArray:@[@"AMAR YT V5 · 6",m[@"title"]?:@"المودات",m[@"body"]?:@"تعذّر فتح صفحة المتجر. أعد فتح القسم للمحاولة مجددًا."]];
- if(update){[lines addObject:[NSString stringWithFormat:@"الإصدار %@",m[[kind isEqual:@"force"]?@"minimum":@"latest"]]];[lines addObjectsFromArray:m[@"features"]];}
- for(NSString *line in lines){UILabel *label=[UILabel new];label.text=line;label.numberOfLines=0;label.textAlignment=NSTextAlignmentCenter;label.textColor=UIColor.whiteColor;[stack addArrangedSubview:label];}
- void (^button)(NSString*,NSString*)=^(NSString *title,NSString *action){UIButton *b=[UIButton buttonWithType:UIButtonTypeSystem];b.accessibilityIdentifier=action;[b setTitle:title forState:0];b.tintColor=UIColor.whiteColor;b.backgroundColor=UIColor.darkGrayColor;[b addTarget:self action:@selector(nativeAction:) forControlEvents:UIControlEventTouchUpInside];[stack addArrangedSubview:b];};
- button(m[@"action"]?:@"إغلاق",update?@"update":@"close");
- if([m[@"contactURL"] length] && [m[@"contact"] length])button(m[@"contact"],@"contact");
- if(!store && ![kind isEqual:@"force"])button(@"إغلاق",@"close");
+ [self.panel removeFromSuperview];self.panel=nil;self.ready=NO;[self.fallback removeFromSuperview];
+ UIView *root=self.host.view,*shade=[[UIView alloc]initWithFrame:root.bounds];self.fallback=shade;
+ shade.semanticContentAttribute=UISemanticContentAttributeForceRightToLeft;shade.accessibilityViewIsModal=YES;
+ shade.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;shade.backgroundColor=[UIColor colorWithWhite:.015 alpha:.82];[root addSubview:shade];
+ UIColor *gold=[UIColor colorWithRed:.95 green:.74 blue:.26 alpha:1];
+ UIView *card=[UIView new];card.translatesAutoresizingMaskIntoConstraints=NO;card.clipsToBounds=YES;card.layer.cornerRadius=22;card.layer.borderWidth=1;card.layer.borderColor=gold.CGColor;
+ card.backgroundColor=[UIColor colorWithRed:.075 green:.092 blue:.124 alpha:1];[shade addSubview:card];
+ UIScrollView *scroll=[UIScrollView new];scroll.translatesAutoresizingMaskIntoConstraints=NO;[card addSubview:scroll];
+ UIStackView *stack=[UIStackView new];stack.translatesAutoresizingMaskIntoConstraints=NO;stack.axis=UILayoutConstraintAxisVertical;stack.spacing=9;
+ stack.layoutMargins=UIEdgeInsetsMake(16,18,16,18);stack.layoutMarginsRelativeArrangement=YES;[scroll addSubview:stack];
+ UILayoutGuide *safe=shade.safeAreaLayoutGuide;
+ CGFloat cap=root.traitCollection.userInterfaceIdiom==UIUserInterfaceIdiomPad?500:366;
+ NSLayoutConstraint *width=[card.widthAnchor constraintEqualToConstant:cap];width.priority=UILayoutPriorityDefaultHigh;
+ NSLayoutConstraint *height=[card.heightAnchor constraintEqualToAnchor:stack.heightAnchor];height.priority=UILayoutPriorityDefaultHigh;
+ [NSLayoutConstraint activateConstraints:@[width,height,[card.centerXAnchor constraintEqualToAnchor:safe.centerXAnchor],[card.centerYAnchor constraintEqualToAnchor:safe.centerYAnchor],[card.widthAnchor constraintLessThanOrEqualToAnchor:safe.widthAnchor constant:-24],[card.heightAnchor constraintLessThanOrEqualToAnchor:safe.heightAnchor constant:-24],[scroll.leadingAnchor constraintEqualToAnchor:card.leadingAnchor],[scroll.trailingAnchor constraintEqualToAnchor:card.trailingAnchor],[scroll.topAnchor constraintEqualToAnchor:card.topAnchor],[scroll.bottomAnchor constraintEqualToAnchor:card.bottomAnchor],[stack.widthAnchor constraintEqualToAnchor:scroll.frameLayoutGuide.widthAnchor],[stack.leadingAnchor constraintEqualToAnchor:scroll.contentLayoutGuide.leadingAnchor],[stack.trailingAnchor constraintEqualToAnchor:scroll.contentLayoutGuide.trailingAnchor],[stack.topAnchor constraintEqualToAnchor:scroll.contentLayoutGuide.topAnchor],[stack.bottomAnchor constraintEqualToAnchor:scroll.contentLayoutGuide.bottomAnchor]]];
+ UILabel *(^label)(NSString*,UIFontTextStyle)=^UILabel*(NSString *text,UIFontTextStyle style){
+  UILabel *l=[UILabel new];l.numberOfLines=0;l.textAlignment=NSTextAlignmentCenter;l.textColor=UIColor.whiteColor;l.font=[UIFont preferredFontForTextStyle:style];l.adjustsFontForContentSizeCategory=YES;l.text=text;[stack addArrangedSubview:l];return l;
+ };
+ UIButton *(^button)(NSString*,NSString*,NSString*)=^UIButton*(NSString *title,NSString *symbol,NSString *action){
+  UIButton *b=[UIButton buttonWithType:UIButtonTypeSystem];[b setTitle:title forState:0];[b setImage:[UIImage systemImageNamed:symbol] forState:0];b.tintColor=gold;b.accessibilityLabel=title;b.accessibilityIdentifier=action;
+  b.titleLabel.font=[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];b.titleLabel.adjustsFontForContentSizeCategory=YES;b.titleLabel.numberOfLines=0;b.titleLabel.textAlignment=NSTextAlignmentCenter;
+  b.layer.cornerRadius=10;b.backgroundColor=[UIColor colorWithWhite:1 alpha:.07];b.contentEdgeInsets=UIEdgeInsetsMake(5,4,5,4);
+  [[b.heightAnchor constraintGreaterThanOrEqualToConstant:44] setActive:YES];[b addTarget:self action:@selector(nativeAction:) forControlEvents:UIControlEventTouchUpInside];return b;
+ };
+ UIStackView *(^row)(void)=^UIStackView*{UIStackView *r=[UIStackView new];r.axis=UIContentSizeCategoryIsAccessibilityCategory(root.traitCollection.preferredContentSizeCategory)?UILayoutConstraintAxisVertical:UILayoutConstraintAxisHorizontal;r.spacing=5;r.distribution=UIStackViewDistributionFillEqually;[stack addArrangedSubview:r];return r;};
+ UIImage *logo=[UIImage imageWithContentsOfFile:[NSBundle.mainBundle.resourcePath stringByAppendingPathComponent:@"GTAVArabic/custom_social_icon.jpeg"]];
+ UIImageView *mark=[[UIImageView alloc]initWithImage:logo?:[UIImage systemImageNamed:@"gamecontroller.fill"]];mark.contentMode=UIViewContentModeScaleAspectFit;mark.tintColor=gold;mark.accessibilityLabel=@"AMAR YT";[stack addArrangedSubview:mark];[[mark.heightAnchor constraintEqualToConstant:54] setActive:YES];
+ label(m[@"title"]?:@"المودات",UIFontTextStyleTitle2).accessibilityTraits=UIAccessibilityTraitHeader;
+ label(m[@"body"]?:@"تعذر فتح الفهرس. أعد فتح قسم المودات للمحاولة مجددًا.",UIFontTextStyleBody);
+ if(update){label([NSString stringWithFormat:@"الإصدار المطلوب %@",m[forced?@"minimum":@"latest"]],UIFontTextStyleSubheadline);for(NSString *line in m[@"features"])label(line,UIFontTextStyleFootnote);}
+ if(welcome){
+  UIStackView *links=row();
+  if([self.config[@"sections"][@"mods"] boolValue])[links addArrangedSubview:button(@"المودات",@"shippingbox",@"mods")];
+  [links addArrangedSubview:button(@"الأخبار",@"bell",@"news")];
+  if([m[@"contactURL"] length])[links addArrangedSubview:button(@"الدعم",@"paperplane",@"contact")];
+ }
+ UIButton *primary=button(m[@"action"]?:@"إغلاق",update?@"arrow.down.circle":@"gamecontroller.fill",update?@"update":@"close");primary.backgroundColor=gold;primary.tintColor=UIColor.blackColor;[stack addArrangedSubview:primary];
+ if([m[@"contactURL"] length] && [m[@"contact"] length])[stack addArrangedSubview:button(m[@"contact"],@"bubble.left",@"contact")];
+ if(welcome){UIStackView *social=row();[social addArrangedSubview:button(@"Instagram",@"camera",@"social-instagram")];[social addArrangedSubview:button(@"Telegram",@"paperplane",@"social-telegram")];[social addArrangedSubview:button(@"TikTok",@"music.note",@"social-tiktok")];}
+ if(!forced && m)[stack addArrangedSubview:button(@"إغلاق",@"xmark",@"close")];
+ [root bringSubviewToFront:self.activeBadge];
+ if(!UIAccessibilityIsReduceMotionEnabled()){card.alpha=.2;[UIView animateWithDuration:.22 animations:^{card.alpha=1;}];}
+ UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification,stack);
+ trace([NSString stringWithFormat:@"native %@ mounted on %@",kind,NSStringFromClass(self.host.class)]);
 }
 static char sidebarFrames;
 static CGRect originalFrame(UIView *v){
@@ -206,27 +263,39 @@ static BOOL brandView(UIView *v){
 -(void)layout:(UIViewController*)vc{
  NSArray *tabs=member(vc,"_tabs");UIView *side=member(vc,"_sidebar");
  if(![side isKindOfClass:UIView.class] || ![tabs isKindOfClass:NSArray.class])return;
- NSArray *names=@[@"الألعاب",@"الحفظ",@"الإعدادات",@"المودات"];
- NSMutableArray *visible=[NSMutableArray new];CGFloat total=0;
- for(UIButton *b in tabs){
-  if(![b isKindOfClass:UIButton.class] || b.tag<0 || b.tag>=4)continue;
-  NSString *name=names[b.tag];NSAttributedString *old=[b attributedTitleForState:0];
+ NSDictionary *names=@{@"GAMES":@"الألعاب",@"الألعاب":@"الألعاب",@"DATA":@"الحفظ",@"SAVES":@"الحفظ",@"الحفظ":@"الحفظ",@"البيانات وملفات الحفظ":@"الحفظ",@"ملفات الحفظ":@"الحفظ",@"SETTINGS":@"الإعدادات",@"الإعدادات":@"الإعدادات",@"MODS":@"المودات",@"المودات":@"المودات"};
+ NSMutableArray *visible=[NSMutableArray new];CGFloat total=0;SEL action=NSSelectorFromString(@"tabTapped:");
+ NSMutableArray *geometry=[NSMutableArray new];
+ for(UIButton *button in tabs){
+  if(![button isKindOfClass:UIButton.class] || ![[button actionsForTarget:vc forControlEvent:UIControlEventTouchUpInside] containsObject:NSStringFromSelector(action)])continue;
+  NSAttributedString *old=[button attributedTitleForState:0];NSString *name=names[button.accessibilityLabel.uppercaseString?:@""]?:names[old.string.uppercaseString?:@""];if(!name)continue;
   NSMutableDictionary *attrs=old.length?[[old attributesAtIndex:0 effectiveRange:NULL] mutableCopy]:[NSMutableDictionary new];
   [attrs removeObjectForKey:NSKernAttributeName];attrs[NSFontAttributeName]=[UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
   NSAttributedString *title=[[NSAttributedString alloc]initWithString:name attributes:attrs];
-  if(!old || ![title isEqualToAttributedString:old])[b setAttributedTitle:title forState:0];
-  b.titleLabel.adjustsFontSizeToFitWidth=YES;b.titleLabel.minimumScaleFactor=.60;b.titleLabel.textAlignment=NSTextAlignmentCenter;
-  b.contentEdgeInsets=UIEdgeInsetsZero;b.titleEdgeInsets=UIEdgeInsetsZero;b.accessibilityLabel=name;
-  if(!b.hidden){[visible addObject:b];total+=ceil(title.size.width)+12;}
+  if(!old || ![title isEqualToAttributedString:old])[button setAttributedTitle:title forState:0];
+  button.titleLabel.adjustsFontSizeToFitWidth=NO;button.contentEdgeInsets=UIEdgeInsetsZero;button.titleEdgeInsets=UIEdgeInsetsZero;button.accessibilityLabel=name;
+  if(!button.hidden){[visible addObject:button];total+=ceil(title.size.width)+12;[geometry addObject:[NSString stringWithFormat:@"%@ %.0f",name,button.frame.size.width]];}
  }
  if(visible.count){
-  UIButton *first=visible.firstObject;UIView *parent=first.superview;UIView *avatar=member(vc,"_avatar");
+  UIButton *first=visible.firstObject;UIView *parent=first.superview==self.tabScroll?self.tabParent:first.superview;UIView *avatar=member(vc,"_avatar");
   CGRect rail=[side convertRect:side.bounds toView:parent];CGFloat left=MAX(parent.safeAreaInsets.left+3,CGRectGetMaxX(rail)+4);
   CGFloat right=CGRectGetWidth(parent.bounds)-parent.safeAreaInsets.right-4;
   if([avatar isKindOfClass:UIView.class] && !avatar.hidden && avatar.superview==parent)right=MIN(right,CGRectGetMinX(avatar.frame)-5);
-  CGFloat free=right-left, gap=4,room=free-gap*(visible.count-1);
-  if(room>0 && total>0){CGFloat scale=MIN(1,room/total),x=right-(total*scale+gap*(visible.count-1));
-   for(UIButton *b in visible){CGRect f=b.frame;f.origin.x=x;f.size.width=(ceil([b attributedTitleForState:0].size.width)+12)*scale;if(!CGRectEqualToRect(b.frame,f))b.frame=f;x=CGRectGetMaxX(f)+gap;}
+  CGFloat gap=4,full=total+gap*(visible.count-1),room=right-left;
+  if(room>0 && parent){
+   BOOL compact=full>room;CGFloat y=first.frame.origin.y,height=MAX(32,first.frame.size.height);
+   if(first.superview==self.tabScroll && y==0)y=self.tabScroll.frame.origin.y;
+   if(compact){
+    if(!self.tabScroll || self.tabParent!=parent){self.tabScroll=[UIScrollView new];self.tabScroll.showsHorizontalScrollIndicator=YES;self.tabParent=parent;[parent addSubview:self.tabScroll];}
+    self.tabScroll.frame=CGRectMake(left,y,room,height);self.tabScroll.contentSize=CGSizeMake(full,height);
+   }
+   CGFloat x=compact?0:right-full;
+   for(UIButton *button in visible){
+    UIView *container=compact?self.tabScroll:parent;if(button.superview!=container)[container addSubview:button];
+    CGRect f=CGRectMake(x,compact?0:y,ceil([button attributedTitleForState:0].size.width)+12,height);
+    if(!CGRectEqualToRect(button.frame,f))button.frame=f;x=CGRectGetMaxX(f)+gap;
+   }
+   if(!compact && self.tabScroll){for(UIView *v in self.tabScroll.subviews.copy)if([tabs containsObject:v])[parent addSubview:v];[self.tabScroll removeFromSuperview];self.tabScroll=nil;self.tabParent=nil;}
   }
  }
  if(self.storeButton.superview!=side){
@@ -250,8 +319,8 @@ static BOOL brandView(UIView *v){
  self.storeButton.frame=CGRectMake(3,MIN(h-row,MAX(0,pivot*k+2)),MAX(0,w-6),row);self.storeButton.hidden=!enabled;
  NSString *caption=w>=96?@"  المودات":@"";if(![[self.storeButton titleForState:0] isEqual:caption])[self.storeButton setTitle:caption forState:0];
  NSString *sig=[NSString stringWithFormat:@"tabs=%lu sidebar=%.0fx%.0f modsY=%.0f",(unsigned long)visible.count,w,h,self.storeButton.frame.origin.y];
- if(![self.layoutSignature isEqual:sig]){self.layoutSignature=sig;trace(sig);}
- UIView *top=self.fallback?:self.panel;if(top.superview==vc.view)[vc.view bringSubviewToFront:top];
+ if(![self.layoutSignature isEqual:sig]){self.layoutSignature=sig;trace(sig);trace([NSString stringWithFormat:@"tab widths before %@ after %@",geometry,[visible valueForKeyPath:@"frame"]]);}
+ UIView *top=self.fallback?:self.panel;if(top && top.superview==vc.view)[vc.view bringSubviewToFront:top];if(self.activeBadge.superview==vc.view)[vc.view bringSubviewToFront:self.activeBadge];
 }
 -(void)userContentController:(WKUserContentController*)c didReceiveScriptMessage:(WKScriptMessage*)msg{
  if(msg.webView!=self.panel || !msg.frameInfo.mainFrame || !samePanel(msg.frameInfo.request.URL) || ![msg.body isKindOfClass:NSDictionary.class])return;
@@ -268,7 +337,7 @@ static BOOL brandView(UIView *v){
  NSString *link=nil;
  if([a isEqual:@"update"] && update)link=m[@"url"];
  if([a isEqual:@"contact"] && !store)link=m[@"contactURL"];
- if(store && [a isEqual:@"social"])link=self.config[@"social"][ident];
+ if((store || [self.kind isEqual:@"welcome"]) && [a isEqual:@"social"])link=self.config[@"social"][ident];
  if(link.length){NSURL *url=[NSURL URLWithString:link];if([url.scheme.lowercaseString isEqual:@"https"])[UIApplication.sharedApplication openURL:url options:@{} completionHandler:nil];}
  if(!store)return;
  if([a isEqual:@"clearCatalog"]){[prefs() removeObjectForKey:key(@"catalog")];[self loadMods];self.status=@"تم مسح قائمة المودات المخزّنة.";[self render];return;}
@@ -399,7 +468,26 @@ static BOOL saveMod(NSURL *tmp,NSDictionary *mod,NSURL *stage){
 }
 @end
 // Chain only the launcher's own lifecycle implementations after UIKit has loaded.
-static IMP appeared,disappeared,layout,toggle;
+@interface AMARWindowProbe : UIView
+@property(nonatomic,weak) UIViewController *owner;
+@end
+@implementation AMARWindowProbe
+-(void)didMoveToWindow{
+ [super didMoveToWindow];
+ if(!self.window){if(kit.host==self.owner){kit.visible=NO;[kit hide];}return;}
+ dispatch_async(dispatch_get_main_queue(),^{
+  UIViewController *vc=self.owner;if(self.window && vc.viewIfLoaded.window==self.window && !vc.presentedViewController){
+   trace(@"probe mounted inside launcher view");[kit appeared:vc];
+  }
+ });
+}
+@end
+static IMP appeared,disappeared,layout,toggle,didLoad;
+static void onLoad(UIViewController *vc,SEL sel){
+ ((void(*)(id,SEL))didLoad)(vc,sel);
+ AMARWindowProbe *probe=[AMARWindowProbe new];probe.owner=vc;probe.hidden=YES;probe.userInteractionEnabled=NO;[vc.view addSubview:probe];
+ trace(@"launcher viewDidLoad");
+}
 static void onToggle(UIViewController *vc,SEL sel){((void(*)(id,SEL))toggle)(vc,sel);[vc.view setNeedsLayout];}
 static void onAppear(UIViewController *vc,SEL s,BOOL animated){((void(*)(id,SEL,BOOL))appeared)(vc,s,animated);[kit appeared:vc];}
 static void onDisappear(UIViewController *vc,SEL s,BOOL animated){((void(*)(id,SEL,BOOL))disappeared)(vc,s,animated);if(kit.host==vc){kit.visible=NO;[kit hide];}}
@@ -417,9 +505,17 @@ static UIViewController *visibleLauncher(UIViewController *vc,Class cls){
  for(UIViewController *child in vc.childViewControllers){UIViewController *found=visibleLauncher(child,cls);if(found)return found;}
  return nil;
 }
+static UIViewController *launcherOwningView(UIView *view,Class cls){
+ if(view.hidden || view.alpha<.01 || !view.window)return nil;
+ UIResponder *owner=view.nextResponder;
+ if([owner isKindOfClass:cls] && [(UIViewController*)owner viewIfLoaded]==view && ![(UIViewController*)owner presentedViewController])return (UIViewController*)owner;
+ for(UIView *child in view.subviews.reverseObjectEnumerator){UIViewController *vc=launcherOwningView(child,cls);if(vc)return vc;}
+ return nil;
+}
 static void attach(void){
  Class cls=NSClassFromString(@"MPLauncherViewController");if(!cls || ![cls isSubclassOfClass:UIViewController.class]){trace(@"waiting for launcher class");return;}
  if(!kit){kit=[AMARYTKit new];
+  didLoad=install(cls,@selector(viewDidLoad),(IMP)onLoad);
   appeared=install(cls,@selector(viewDidAppear:),(IMP)onAppear);
   disappeared=install(cls,@selector(viewDidDisappear:),(IMP)onDisappear);
   layout=install(cls,@selector(viewDidLayoutSubviews),(IMP)onLayout);
@@ -427,17 +523,20 @@ static void attach(void){
   trace(@"launcher class found; lifecycle attached");
  }
  if(!kit.visible){
-  for(UIWindow *window in UIApplication.sharedApplication.windows){
+  NSMutableOrderedSet *windows=[NSMutableOrderedSet orderedSetWithArray:UIApplication.sharedApplication.windows];
+  for(UIScene *scene in UIApplication.sharedApplication.connectedScenes)if([scene isKindOfClass:UIWindowScene.class] && scene.activationState!=UISceneActivationStateBackground)[windows addObjectsFromArray:[(UIWindowScene*)scene windows]];
+  for(UIWindow *window in windows){
    if(window.hidden || window.windowLevel!=UIWindowLevelNormal)continue;
-   UIViewController *vc=visibleLauncher(window.rootViewController,cls);if(vc){[kit appeared:vc];break;}
+   UIViewController *vc=visibleLauncher(window.rootViewController,cls)?:launcherOwningView(window,cls);if(vc){[kit appeared:vc];break;}
   }
  }
+ if(!kit.visible)trace(@"launcher not visible yet");
  if(!kit.config)[kit refreshIfNeeded];
 }
 __attribute__((constructor)) static void startKit(void){
- @autoreleasepool{trace(@"AMARYTKit loaded · build 6");}
+ @autoreleasepool{trace(@"startKit entered · build 7");}
  dispatch_async(dispatch_get_main_queue(),^{
-  for(NSString *name in @[UIApplicationDidFinishLaunchingNotification,UIApplicationDidBecomeActiveNotification,UIWindowDidBecomeKeyNotification])
+  for(NSString *name in @[UIApplicationDidFinishLaunchingNotification,UIApplicationDidBecomeActiveNotification,UIWindowDidBecomeKeyNotification,UIWindowDidBecomeVisibleNotification,UISceneDidActivateNotification])
    [NSNotificationCenter.defaultCenter addObserverForName:name object:nil queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification *note){attach();}];
   attach();
   for(NSNumber *delay in @[@0.3,@1,@3]) dispatch_after(dispatch_time(DISPATCH_TIME_NOW,(int64_t)(delay.doubleValue*NSEC_PER_SEC)),dispatch_get_main_queue(),^{if(!kit.visible)attach();});

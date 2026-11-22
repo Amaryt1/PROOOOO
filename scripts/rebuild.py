@@ -1,138 +1,63 @@
 #!/usr/bin/env python3
-"""Rebuild a personal V5 package from the supported V4. Sign all nested code afterwards."""
+"""Build the diagnostic IPA using the exact FINAL(4) input, then sign the whole bundle."""
 import argparse
-from copy import copy
 import hashlib
 import json
 import os
 import plistlib
 import shutil
-import struct
 import subprocess
 import tempfile
 import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-APP = 'Payload/GTAV.app/'
-ARABIC = APP + 'GTAVArabic.dylib'
-TRANSLATION = APP + 'GTAVArabic/launcher_ar.json'
-TARGETS = [APP+'GTA5', ARABIC, APP+'Frameworks/libgtacompat.dylib']
-DEPENDENCY = b'@executable_path/Frameworks/AMARYTKit.dylib\0'
+BASE_HASH = '4adc5fc848ca09c5d9327a6fa2895c53482da6b6ad318c9914e090e6dba36ab6'
 
-def digest(data):
-    return hashlib.sha256(data).hexdigest()
-
-def stream_hash(stream):
-    h = hashlib.sha256()
-    while block := stream.read(2**20):
-        h.update(block)
-    return h.hexdigest()
-
-def link_kit(original):
-    data = bytearray(original)
-    magic, count = struct.unpack_from('>2I', data)
-    if (magic, count) != (0xcafebabe, 2):
-        raise ValueError('Unexpected V4 localization library')
-    size = (24 + len(DEPENDENCY) + 7) & ~7
-    command = struct.pack('<6I', 0x80000018, size, 24, 0, 0, 0) + DEPENDENCY
-    for i in range(count):
-        cpu, _, base, length, _ = struct.unpack_from('>5I', data, 8+20*i)
-        if cpu != 0x100000c or base+length > len(data):
-            raise ValueError('Unexpected slice')
-        n, used = struct.unpack_from('<2I', data, base+16)
-        end = base+32+used
-        at = base+32
-        sections = []
-        for _ in range(n):
-            cmd, sz = struct.unpack_from('<2I', data, at)
-            if sz < 8 or at+sz > end:
-                raise ValueError('Malformed Mach-O commands')
-            if cmd == 25:
-                nsects = struct.unpack_from('<I', data, at+64)[0]
-                sections.extend(struct.unpack_from('<I', data, at+120+j*80)[0] for j in range(nsects))
-            at += sz
-        first = base+min(x for x in sections if x)
-        if at != end or end+size > first or any(data[end:end+size]):
-            raise ValueError('Missing verified header space')
-        data[end:end+size] = command.ljust(size,b'\0')
-        struct.pack_into('<2I', data, base+16,n+1,used+size)
-    return data
-
-def rebuild(src, out, tmp):
-    kit = tmp/'AMARYTKit.dylib'
-    subprocess.run([ROOT/'scripts/compile.sh', kit],check=True)
-    # Only the two changed code objects are provisionally signed. Device signing seals the outer app.
-    def sign(path):
-        cmd=[os.environ.get('ZSIGN','zsign'),'-a','-f',str(path)] if not shutil.which('codesign') else ['codesign','--force','--sign','-',str(path)]
-        subprocess.run(cmd,check=True,stdout=subprocess.DEVNULL)
-    sign(kit)
-    trust=json.loads((ROOT/'scripts/v4-hashes.json').read_text())
-    with zipfile.ZipFile(src) as old:
-        names=old.namelist()
-        if len(names)!=len(set(names)):
-            raise ValueError('Duplicate archive entries')
-        for name in TARGETS:
-            with old.open(name) as f:
-                if stream_hash(f)!=trust[name]:
-                    raise ValueError('Unsupported V4 binary: '+name)
-        original=old.read(ARABIC)
-        lang=json.loads(old.read(TRANSLATION))
-        lang['launcher'].update({'GAMES':'الألعاب','MODS':'المودات','SAVES':'الحفظ','SETTINGS':'الإعدادات'})
-        pl=plistlib.loads(old.read(APP+'Info.plist'))
-        pl.update(CFBundleDisplayName='AMAR YT V5',CFBundleShortVersionString='5.0',CFBundleVersion='6')
-        changes={ARABIC:link_kit(original),TRANSLATION:json.dumps(lang,ensure_ascii=False,indent=2).encode(),APP+'Info.plist':plistlib.dumps(pl)}
-        localized=tmp/'GTAVArabic.dylib'
-        localized.write_bytes(changes[ARABIC])
-        sign(localized)
-        changes[ARABIC]=localized.read_bytes()
-        additions={APP+'Frameworks/AMARYTKit.dylib':kit.read_bytes()}
-        for path in ['config.json','mods.json','source/panel.html','source/policy.js']:
-            content=(ROOT/path).read_bytes()
-            if path=='config.json':
-                fallback=json.loads(content)
-                fallback['welcome'].update(id='welcome-final-local',enabled=False)
-                content=json.dumps(fallback,ensure_ascii=False).encode()
-            additions[APP+'AMARYTKit/'+Path(path).name]=content
-        resources=APP+'_CodeSignature/CodeResources'
-        seal=plistlib.loads(old.read(resources))
-        for name,content in {**changes,**additions}.items():
-            rel=name[len(APP):]
-            if rel=='Info.plist': continue
-            sha1=hashlib.sha1(content).digest()
-            seal['files'][rel]=sha1
-            seal['files2'][rel]={'hash':sha1,'hash2':hashlib.sha256(content).digest()}
-        changes[resources]=plistlib.dumps(seal)
-        staged=tmp/'package.ipa'
-        with zipfile.ZipFile(staged,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=3) as new:
-            for item in old.infolist():
-                if item.filename in changes:
-                    new.writestr(copy(item),changes[item.filename])
-                else:
-                    with old.open(item) as r,new.open(copy(item),'w') as w:
-                        shutil.copyfileobj(r,w,2**20)
-            for name,content in additions.items():
-                new.writestr(name,content)
-        with zipfile.ZipFile(staged) as new:
-            if new.testzip(): raise ValueError('CRC verification failed')
-            changed=[]
-            for n in names:
-                with old.open(n) as a,new.open(n) as b:
-                    if stream_hash(a)!=stream_hash(b): changed.append(n)
-            if set(changed)!=set(changes): raise ValueError('Unexpected changed entries')
-            for n,v in changes.items():
-                if digest(new.read(n))!=digest(v): raise ValueError('Output mismatch')
-            report={'original_entries':len(names),'unchanged_entries':len(names)-len(changed),'changed':changed,
-                    'added':sorted(set(new.namelist())-set(names)),'v4_sha256':trust,
-                    'v5_binary_sha256':{}}
-            for n in TARGETS+[APP+'Frameworks/AMARYTKit.dylib']:
-                with new.open(n) as f: report['v5_binary_sha256'][n]=stream_hash(f)
-    with staged.open('rb') as f:report['ipa_sha256']=stream_hash(f)
-    os.replace(staged,out)
-    print(json.dumps(report,indent=2))
+def build(src, output):
+    if output.exists():
+        raise ValueError('Choose a new output path')
+    with src.open('rb') as f:
+        digest = hashlib.sha256()
+        for block in iter(lambda:f.read(1024*1024), b''):
+            digest.update(block)
+    if digest.hexdigest() != BASE_HASH:
+        raise ValueError('Expected the FINAL(4) reference IPA')
+    with tempfile.TemporaryDirectory(dir=output.resolve().parent) as work:
+        folder = Path(work)
+        with zipfile.ZipFile(src) as archive:
+            archive.extractall(folder)
+            for entry in archive.infolist():
+                mode = (entry.external_attr >> 16) & 0o777
+                if mode:
+                    (folder / entry.filename).chmod(mode)
+        app = folder/'Payload/GTAV.app'
+        plist = app/'Info.plist'
+        values = plistlib.loads(plist.read_bytes())
+        values.update(CFBundleDisplayName='GTA V', CFBundleName='GTA V', CFBundleVersion='7')
+        plist.write_bytes(plistlib.dumps(values))
+        ar = app/'GTAVArabic/launcher_ar.json'
+        tr = json.loads(ar.read_bytes())
+        tr['launcher'].update(GAMES='الألعاب', DATA='الحفظ', SETTINGS='الإعدادات', MODS='المودات')
+        ar.write_text(json.dumps(tr, ensure_ascii=False, indent=2))
+        subprocess.run([ROOT/'scripts/compile.sh', app/'Frameworks/AMARYTKit.dylib'], check=True)
+        for name in ('mods.json','source/policy.js','source/panel.html'):
+            shutil.copyfile(ROOT/name, app/'AMARYTKit'/Path(name).name)
+        cfg = json.loads((ROOT/'config.json').read_bytes())
+        cfg['welcome'].update(enabled=True, id='welcome-ui-verification-01', frequency='launch',title='أهلًا بك في AMAR YT')
+        cfg['update']['enabled'] = False
+        (app/'AMARYTKit/config.json').write_text(json.dumps(cfg,ensure_ascii=False,indent=2))
+        signer = os.environ.get('ZSIGN', 'zsign')
+        candidate = folder/'diagnostic.ipa'
+        subprocess.run([signer,'-a','-f','-R','-z','6','-o',candidate,app],cwd=folder,check=True)
+        with zipfile.ZipFile(candidate) as archive:
+            if archive.testzip() or 'Payload/GTAV.app/GTA5' not in archive.namelist():
+                raise ValueError('Invalid signed IPA')
+        os.replace(candidate,output)
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('v4',type=Path);parser.add_argument('output',type=Path);args=parser.parse_args()
-    if args.output.exists():parser.error('Choose a new output path')
-    with tempfile.TemporaryDirectory(dir=args.output.resolve().parent) as t:
-        rebuild(args.v4,args.output,Path(t))
+    parser=argparse.ArgumentParser()
+    parser.add_argument('final4',type=Path)
+    parser.add_argument('output',type=Path)
+    args=parser.parse_args()
+    build(args.final4,args.output)

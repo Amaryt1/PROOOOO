@@ -2,11 +2,54 @@
   "schema": 1,
   "version": 5,
   "modsURL": "https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/mods.json",
-  "identity": {"name": "AMAR YT", "accent": "#D19B56", "logo": ""},
-  "social": {"telegram":"https://t.me/LLYDL","instagram":"https://www.instagram.com/5.9vr/","tiktok":"https://www.tiktok.com/@ammar_mod"},
-  "sections": {"mods": true},
-  "welcome": {"enabled":true,"id":"welcome-final-build6-online","frequency":"once","title":"أهلًا بك في AMAR YT V5","body":"وصلتك رسالة التحقق من مستودع AMAR YT. اضغط متابعة للعودة إلى المشغّل.","image":"","action":"متابعة","contact":"تواصل معنا","contactURL":"https://t.me/LLYDL"},
-  "update": {"enabled":false,"minimum":5,"latest":5,"expiresUTC":"","title":"تحديث AMAR YT","body":"يتوفر إصدار جديد.","image":"","action":"التحديث الآن","url":"https://t.me/AMARYT","contact":"الدعم","contactURL":"https://t.me/LLYDL","features":[]},
-  "notification": {"enabled":false,"id":"news-1","frequency":"once","title":"إشعار","body":"","image":"","action":"متابعة","contact":"","contactURL":""},
+  "identity": {
+    "name": "AMAR YT",
+    "accent": "#D19B56",
+    "logo": ""
+  },
+  "social": {
+    "telegram": "https://t.me/LLYDL",
+    "instagram": "https://www.instagram.com/5.9vr?hvrq=MWliYmhvN21hYWp0cQ==",
+    "tiktok": "https://www.tiktok.com/@ammar_mod"
+  },
+  "sections": {
+    "mods": true
+  },
+  "welcome": {
+    "enabled": true,
+    "id": "welcome-github-build7",
+    "frequency": "launch",
+    "title": "مرحبًا بك في مجتمع AMAR YT",
+    "body": "أهلًا بك في نسختك الخاصة من GTA V. استمتع باللعب، واستكشف المودات الجديدة، وتابع آخر أخبار وتحديثات AMAR YT.",
+    "image": "",
+    "action": "متابعة اللعب",
+    "contact": "تواصل معنا",
+    "contactURL": "https://t.me/LLYDL"
+  },
+  "update": {
+    "enabled": false,
+    "minimum": 5,
+    "latest": 5,
+    "expiresUTC": "",
+    "title": "تحديث AMAR YT",
+    "body": "يتوفر إصدار جديد.",
+    "image": "",
+    "action": "التحديث الآن",
+    "url": "https://t.me/AMARYT",
+    "contact": "الدعم",
+    "contactURL": "https://t.me/LLYDL",
+    "features": []
+  },
+  "notification": {
+    "enabled": false,
+    "id": "news-1",
+    "frequency": "once",
+    "title": "إشعار",
+    "body": "",
+    "image": "",
+    "action": "متابعة",
+    "contact": "",
+    "contactURL": ""
+  },
   "news": []
 }
