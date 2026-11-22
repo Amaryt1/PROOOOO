@@ -1,29 +1,15 @@
-# نشر حزمة السيارات العراقية الثلاث داخل AMAR YT
+# الحزمة المعتمدة — Iraqi Garage
 
-حزمة الاختبار الأصلية (التي سبق نجاح استيرادها داخل اللعبة):
-- **الاسم الدقيق:** `Iraqi_Garage_3_Cars_Realistic_Driving_Audio_Fixed_FiveStarPort.zip`
-- **الحجم:** `73604201` بايت
-- **SHA-256:** `792d9a4e714ed16cb753982eec74e25c0e3a5882f7033b3109af54f8686f286e`
-- **السيارات:** `sj131` سايبة، `405glxfnt` بيجو 405، `srtday20` تشارجر.
+**هذا الإصدار منشور وجاهز**. تم التحقق من ZIP ورفع الملف إلى [GitHub Releases](https://github.com/Amaryt1/PROOOOO/releases/tag/iraqi-garage-3cars-v1) وإضافته إلى `mods.json`، وأكد صاحب الجهاز أن استيراده تلقائيًا من المتجر نجح وظهرت السيارات داخل قسم المودات الأصلي.
 
-## خطوة الرفع الوحيدة
+- ZIP: `Iraqi_Garage_3_Cars_Realistic_Driving_Audio_Fixed_FiveStarPort.zip`
+- الحجم: 73,604,201 بايت
+- SHA-256: `792d9a4e714ed16cb753982eec74e25c0e3a5882f7033b3109af54f8686f286e`
+- السيارات: `sj131` (سايبة)، `405glxfnt` (بيجو 405)، `srtday20` (دودج تشارجر).
+- مسار الاستيراد المعتمد في ZIP: `update/x64/dlcpacks/<car-id>/dlc.rpf`
 
-1. افتح [صفحة إصدارات المستودع](https://github.com/Amaryt1/PROOOOO/releases) بحساب مالك المستودع.
-2. افتح إصدار **Draft** بالاسم **Iraqi Garage - Saipa, Peugeot 405 and Charger**، ووسم `iraqi-garage-3cars-v1`.
-3. أرفق ملف ZIP الأصلي **كما هو دون تعديل اسمه أو فك ضغطه** تحت خانة Attach binaries.
-4. اضغط **Publish release**.
+## حزم المستقبل
 
-بعد النشر، GitHub Actions يبدأ فحص الملف. إذا تطابقت بصمته وأحجام ومحتويات الملفات الثلاثة، يضيف العنصر `iraqi-garage-3` إلى أول `mods.json` تلقائيًا. عند نجاحه سيظهر المود في متجر AMAR YT بعد «تحديث القائمة»، بدون تعديل IPA.
+لا ترفع مودًا جديدًا على أنه يعمل لمجرد أنه ZIP. افحصه بالأداة `scripts/inspect_dlc_zip.py` وراجع [مرجع البنية التي نجحت](DLC-ZIP-COMPATIBILITY-AR.md). لا تحوّل `YFT/YTD` إلى `dlc.rpf` بإعادة التسمية؛ تحتاج إلى DLC صالح ومختبَر. بعد رفعه إلى GitHub Releases أضف رابط ZIP وحجمه وبصمته وصورته إلى `mods.json` فقط؛ ملفات اللعبة لا تتغير.
 
-**مهم:** قبل رفع الملف ونشره، لن يظهر العنصر في `mods.json`؛ هذا متعمد لتجنب روابط تنزيل معطلة.
-
-## آلية الأمان
-
-- لا يُقبل إلا ZIP الأصلي بالحجم وبصمة SHA-256 المثبتين أعلاه.
-- يتحقق الفحص من سلامة الأرشيف ومن وجود ثلاثة ملفات `dlc.rpf` الأساسية.
-- رابط التحميل سيكون من **GitHub Releases**، وليس ملفًا مضمنًا في اللعبة.
-- صورة الغلاف التوضيحية موجودة في `images/mods/iraqi-garage.svg`.
-- ملفات GTA V التنفيذية وزر PLAY لا يطالها هذا الإجراء.
-- **التنزيل لا يساوي التثبيت**؛ ظهور المود الفعلي بعد الاستيراد يحتاج تأكيدًا من المستورد.
-
-مراجعة نتيجة النشر: [GitHub Actions](https://github.com/Amaryt1/PROOOOO/actions/workflows/publish-iraqi-garage.yml).
+قائمة المتجر الحالية تحتوي **حزمة Iraqi Garage فقط**، والحزم التجريبية القديمة أُزيلت.
