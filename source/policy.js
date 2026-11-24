@@ -11,7 +11,7 @@ function message(m) {
     && m.title.length && m.action.length && image(m.image) && image(m.contactURL);
 }
 function validConfig(c) {
-  if(!obj(c) || c.schema!==1 || !int(c.version) || !url(c.modsURL)) return false;
+  if(!obj(c) || c.schema!==1 || !int(c.version) || c.modsURL!=='https://raw.githubusercontent.com/Amaryt1/PROOOOO/main/mods.json') return false;
   if(!obj(c.identity) || !text(c.identity.name,80) || !/^#[a-f\d]{6}$/i.test(c.identity.accent) || !image(c.identity.logo)) return false;
   if(!obj(c.social) || !['telegram','instagram','tiktok'].every(k=>url(c.social[k])) || !obj(c.sections) || !flag(c.sections.mods)) return false;
   if(![c.welcome,c.notification].every(m=>message(m) && id(m.id) && ['once','launch'].includes(m.frequency))) return false;
@@ -59,9 +59,9 @@ function validMods(c) {
   });
 }
 function mode(c,version,now) {
-  const u=c.update, end=Date.parse(u.expiresUTC);
-  if(!u.enabled) return '';
-  if(version<u.minimum && now<end && end-now<=7*86400000) return 'force';
+  // AMAR YT: remote update notices must never prevent local play.
+  const u=c && c.update;
+  if(!u || !u.enabled) return '';
   return version<u.latest ? 'optional' : '';
 }
 
