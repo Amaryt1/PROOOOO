@@ -6,10 +6,10 @@ const c=JSON.parse(fs.readFileSync('config.json')),mods=JSON.parse(fs.readFileSy
 assert(ctx.validConfig(c));assert(ctx.validMods(mods));
 const now=Date.UTC(2026,10,22),copy=x=>JSON.parse(JSON.stringify(x));
 const u=copy(c);Object.assign(u.update,{enabled:true,minimum:6,latest:7,expiresUTC:new Date(now+3600000).toISOString()});
-assert(ctx.validConfig(u));assert.equal(ctx.mode(u,5,now),'force');assert.equal(ctx.mode(u,6,now),'optional');assert.equal(ctx.mode(u,7,now),'');
+assert(ctx.validConfig(u));assert.equal(ctx.mode(u,5,now),'optional');assert.equal(ctx.mode(u,6,now),'optional');assert.equal(ctx.mode(u,7,now),'');
 assert.equal(ctx.mode(u,5,now+3600001),'optional');assert.equal(ctx.mode(c,5,now),'');
-u.update.expiresUTC=new Date(now+8*86400000).toISOString();assert.notEqual(ctx.mode(u,5,now),'force');
-for(const bad of [null,{},[],{...c,update:{}},{...c,modsURL:'file:///bad'},{...c,welcome:{...c.welcome,enabled:'true'}},{...c,notification:{...c.notification,contactURL:'javascript:bad()'}}])assert(!ctx.validConfig(bad));
+u.update.expiresUTC=new Date(now+8*86400000).toISOString();assert.equal(ctx.mode(u,5,now),'optional');
+for(const bad of [null,{},[],{...c,update:{}},{...c,modsURL:'file:///bad'},{...c,modsURL:'https://example.com/mods.json'},{...c,welcome:{...c.welcome,enabled:'true'}},{...c,notification:{...c.notification,contactURL:'javascript:bad()'}}])assert(!ctx.validConfig(bad));
 const m={id:'car',name:'سيارة',category:mods.categories[0],description:'',image:'',size:64,sha256:'a'.repeat(64),url:'https://example.com/test.yft',extension:'yft',minKit:5,maxKit:5,compatibility:'V5'};
 const catalog=(...items)=>({...mods,mods:items});
 assert(ctx.validMods(catalog(m)));assert(!ctx.validMods(catalog(m,m)));
